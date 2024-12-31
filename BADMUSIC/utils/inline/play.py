@@ -1,7 +1,5 @@
 import math
-
 from pyrogram.types import InlineKeyboardButton, WebAppInfo
-
 from BADMUSIC.utils.formatters import time_to_seconds
 
 
@@ -32,12 +30,25 @@ def get_progress_bar(percentage):
         return "▱▱▱▱▱▱▱▱▱"
 
 
+def add_spotify_button(buttons):
+    # Adding the Spotify button to any button list
+    buttons.append(
+        [
+            InlineKeyboardButton(
+                text="ꜱᴘᴏᴛɪꜰʏ",
+                web_app=WebAppInfo(url="https://open.spotify.com/"),
+            )
+        ]
+    )
+    return buttons
+
+
 def stream_markup_timer(_, videoid, chat_id, played, dur):
     played_sec = time_to_seconds(played)
     duration_sec = time_to_seconds(dur)
     percentage = (played_sec / duration_sec) * 100
 
-    bar = get_progress_bar(percentage)  # using for getting the bar
+    bar = get_progress_bar(percentage)
 
     buttons = [
         [
@@ -61,15 +72,10 @@ def stream_markup_timer(_, videoid, chat_id, played, dur):
             InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
             InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
         ],
-        [
-            InlineKeyboardButton(
-                text="ꜱᴘᴏᴛɪꜰʏ",
-                web_app=WebAppInfo(url="https://open.spotify.com/")
-            ),
-        ],
         [InlineKeyboardButton(text=_["CLOSEMENU_BUTTON"], callback_data="close")],
     ]
-    return buttons
+
+    return add_spotify_button(buttons)
 
 
 def stream_markup(_, videoid, chat_id):
@@ -89,15 +95,10 @@ def stream_markup(_, videoid, chat_id):
             InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
             InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
         ],
-        [
-            InlineKeyboardButton(
-                text="ꜱᴘᴏᴛɪꜰʏ",
-                web_app=WebAppInfo(url="https://open.spotify.com/")
-            ),
-        ],
         [InlineKeyboardButton(text=_["CLOSEMENU_BUTTON"], callback_data="close")],
     ]
-    return buttons
+
+    return add_spotify_button(buttons)
 
 
 def telegram_markup_timer(_, chat_id, played, dur):
@@ -105,7 +106,7 @@ def telegram_markup_timer(_, chat_id, played, dur):
     duration_sec = time_to_seconds(dur)
     percentage = (played_sec / duration_sec) * 100
 
-    bar = get_progress_bar(percentage)  # using for getting the bar
+    bar = get_progress_bar(percentage)
 
     buttons = [
         [
@@ -127,16 +128,11 @@ def telegram_markup_timer(_, chat_id, played, dur):
             InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
         ],
         [
-            InlineKeyboardButton(
-                text="ꜱᴘᴏᴛɪꜰʏ",
-                web_app=WebAppInfo(url="https://open.spotify.com/")
-            ),
-        ],
-        [
             InlineKeyboardButton(text=_["CLOSEMENU_BUTTON"], callback_data="close"),
         ],
     ]
-    return buttons
+
+    return add_spotify_button(buttons)
 
 
 def telegram_markup(_, chat_id):
@@ -154,17 +150,11 @@ def telegram_markup(_, chat_id):
             InlineKeyboardButton(text="▢", callback_data=f"ADMIN Stop|{chat_id}"),
         ],
         [
-            InlineKeyboardButton(
-                text="ꜱᴘᴏᴛɪꜰʏ",
-                web_app=WebAppInfo(url="https://open.spotify.com/")
-            ),
-        ],
-        [
             InlineKeyboardButton(text=_["CLOSEMENU_BUTTON"], callback_data="close"),
         ],
     ]
-    return buttons
 
+    return add_spotify_button(buttons)
 
 ## Search Query Inline
 
@@ -179,12 +169,6 @@ def track_markup(_, videoid, user_id, channel, fplay):
             InlineKeyboardButton(
                 text=_["P_B_2"],
                 callback_data=f"MusicStream {videoid}|{user_id}|v|{channel}|{fplay}",
-            ),
-        ],
-        [
-            InlineKeyboardButton(
-                text="ꜱᴘᴏᴛɪꜰʏ",
-                web_app=WebAppInfo(url="https://open.spotify.com/")
             ),
         ],
         [
@@ -206,12 +190,6 @@ def playlist_markup(_, videoid, user_id, ptype, channel, fplay):
             InlineKeyboardButton(
                 text=_["P_B_2"],
                 callback_data=f"BADPlaylists {videoid}|{user_id}|{ptype}|v|{channel}|{fplay}",
-            ),
-        ],
-        [
-            InlineKeyboardButton(
-                text="ꜱᴘᴏᴛɪꜰʏ",
-                web_app=WebAppInfo(url="https://open.spotify.com/")
             ),
         ],
         [
@@ -385,4 +363,3 @@ def panel_markup_3(_, videoid, chat_id):
         ],
     ]
     return buttons
-    
