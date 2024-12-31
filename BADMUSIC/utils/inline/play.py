@@ -1,6 +1,6 @@
 import math
 
-from pyrogram.types import InlineKeyboardButton
+from pyrogram.types import InlineKeyboardButton, WebAppInfo
 
 from BADMUSIC.utils.formatters import time_to_seconds
 
