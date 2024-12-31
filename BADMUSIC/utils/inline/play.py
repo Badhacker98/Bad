@@ -1,5 +1,7 @@
 import math
-from pyrogram.types import InlineKeyboardButton, WebAppInfo
+
+from pyrogram.types import InlineKeyboardButton
+
 from BADMUSIC.utils.formatters import time_to_seconds
 
 
@@ -30,25 +32,12 @@ def get_progress_bar(percentage):
         return "▱▱▱▱▱▱▱▱▱"
 
 
-def add_spotify_button(buttons):
-    # Adding the Spotify button to any button list
-    buttons.append(
-        [
-            InlineKeyboardButton(
-                text="ꜱᴘᴏᴛɪꜰʏ",
-                web_app=WebAppInfo(url="https://open.spotify.com/"),
-            )
-        ]
-    )
-    return buttons
-
-
 def stream_markup_timer(_, videoid, chat_id, played, dur):
     played_sec = time_to_seconds(played)
     duration_sec = time_to_seconds(dur)
     percentage = (played_sec / duration_sec) * 100
 
-    bar = get_progress_bar(percentage)
+    bar = get_progress_bar(percentage)  # using for getting the bar
 
     buttons = [
         [
@@ -74,8 +63,7 @@ def stream_markup_timer(_, videoid, chat_id, played, dur):
         ],
         [InlineKeyboardButton(text=_["CLOSEMENU_BUTTON"], callback_data="close")],
     ]
-
-    return add_spotify_button(buttons)
+    return buttons
 
 
 def stream_markup(_, videoid, chat_id):
@@ -97,8 +85,7 @@ def stream_markup(_, videoid, chat_id):
         ],
         [InlineKeyboardButton(text=_["CLOSEMENU_BUTTON"], callback_data="close")],
     ]
-
-    return add_spotify_button(buttons)
+    return buttons
 
 
 def telegram_markup_timer(_, chat_id, played, dur):
@@ -106,7 +93,7 @@ def telegram_markup_timer(_, chat_id, played, dur):
     duration_sec = time_to_seconds(dur)
     percentage = (played_sec / duration_sec) * 100
 
-    bar = get_progress_bar(percentage)
+    bar = get_progress_bar(percentage)  # using for getting the bar
 
     buttons = [
         [
@@ -131,8 +118,7 @@ def telegram_markup_timer(_, chat_id, played, dur):
             InlineKeyboardButton(text=_["CLOSEMENU_BUTTON"], callback_data="close"),
         ],
     ]
-
-    return add_spotify_button(buttons)
+    return buttons
 
 
 def telegram_markup(_, chat_id):
@@ -153,8 +139,8 @@ def telegram_markup(_, chat_id):
             InlineKeyboardButton(text=_["CLOSEMENU_BUTTON"], callback_data="close"),
         ],
     ]
+    return buttons
 
-    return add_spotify_button(buttons)
 
 ## Search Query Inline
 
