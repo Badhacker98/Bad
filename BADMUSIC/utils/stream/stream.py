@@ -1,7 +1,7 @@
 import os
 from random import randint
 from typing import Union
-
+from pyrogram.enums import ParseMode
 from pyrogram.types import InlineKeyboardMarkup
 
 import config
@@ -193,12 +193,13 @@ async def stream(
             run = await app.send_photo(
                 original_chat_id,
                 photo=img,
-                caption=_["stream_1"].format(
+                caption=_[<blockquote>"stream_1"</blockquote>].format(
                     title[:27],
                     f"https://t.me/{app.username}?start=info_{vidid}",
                     duration_min,
                     user_name,
                 ),
+                parse_mode=ParseMode.HTML,
                 reply_markup=InlineKeyboardMarkup(button),
             )
             db[chat_id][0]["mystic"] = run
