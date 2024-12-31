@@ -112,18 +112,18 @@ async def stream(
                 title[:23],
                 duration_min,
                 user_name,
-                )
+                  )
 
-               caption_text = html.escape(caption_text)
-               caption = f"<blockquote>{caption_text}</blockquote>"
+                    caption_text = html.escape(caption_text)
+                    caption = f"<blockquote>{caption_text}</blockquote>"
 
-               run = await app.send_photo(
-               original_chat_id,
-               photo=img,
-               caption=caption,  # Use the formatted caption here
-               reply_markup=InlineKeyboardMarkup(button),
-               parse_mode=ParseMode.HTML,  # Use the ParseMode enum for HTML
-               )
+                    run = await app.send_photo(
+                    original_chat_id,
+                    photo=img,
+                    caption=caption,  # Use the formatted caption here
+                    reply_markup=InlineKeyboardMarkup(button),
+                    parse_mode=ParseMode.HTML,  # Use the ParseMode enum for HTML
+                 )
                 db[chat_id][0]["mystic"] = run
                 db[chat_id][0]["markup"] = "stream"
         if count == 0:
