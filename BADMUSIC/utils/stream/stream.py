@@ -1,4 +1,5 @@
 import os
+import html
 from random import randint
 from typing import Union
 from pyrogram.enums import ParseMode
@@ -104,18 +105,25 @@ async def stream(
                 )
                 img = await gen_thumb(vidid)
                 button = stream_markup(_, vidid, chat_id)
-                run = await app.send_photo(
-                    original_chat_id,
-                    photo=img,
-                    caption=_["stream_1"].format(
-                    f"https://t.me/{app.username}?start=info_{vidid}",
-                    title[:23],
-                    duration_min,
-                    user_name,
-                ),
-                reply_markup=InlineKeyboardMarkup(button),
-                parse_mode=ParseMode.HTML,
+
+                # Construct the caption with <blockquote> (HTML formatting)
+                caption_text = _["stream_1"].format(
+                f"https://t.me/{app.username}?start=info_{vidid}",
+                title[:23],
+                duration_min,
+                user_name,
                 )
+
+               caption_text = html.escape(caption_text)
+               caption = f"<blockquote>{caption_text}</blockquote>"
+
+               run = await app.send_photo(
+               original_chat_id,
+               photo=img,
+               caption=caption,  # Use the formatted caption here
+               reply_markup=InlineKeyboardMarkup(button),
+               parse_mode=ParseMode.HTML,  # Use the ParseMode enum for HTML
+               )
                 db[chat_id][0]["mystic"] = run
                 db[chat_id][0]["markup"] = "stream"
         if count == 0:
@@ -190,18 +198,26 @@ async def stream(
                 forceplay=forceplay,
             )
             img = await gen_thumb(vidid)
-            button = stream_markup(_, vidid, chat_id)
-            run = await app.send_photo(
-                original_chat_id,
-                photo=img,
-                caption=_["stream_1"].format(
-                        f"https://t.me/{app.username}?start=info_{vidid}",
-                        title[:23],
-                        duration_min,
-                        user_name,
-                    ),
-                    reply_markup=InlineKeyboardMarkup(button),
-            )
+                button = stream_markup(_, vidid, chat_id)
+
+                # Construct the caption with <blockquote> (HTML formatting)
+                caption_text = _["stream_1"].format(
+                f"https://t.me/{app.username}?start=info_{vidid}",
+                title[:23],
+                duration_min,
+                user_name,
+                )
+
+               caption_text = html.escape(caption_text)
+               caption = f"<blockquote>{caption_text}</blockquote>"
+
+               run = await app.send_photo(
+               original_chat_id,
+               photo=img,
+               caption=caption,  # Use the formatted caption here
+               reply_markup=InlineKeyboardMarkup(button),
+               parse_mode=ParseMode.HTML,  # Use the ParseMode enum for HTML
+               )
     except Exception as e:
         print(f"Error sending message: {e}")
             db[chat_id][0]["mystic"] = run
@@ -497,18 +513,26 @@ async def stream(
                 forceplay=forceplay,
             )
             img = await gen_thumb(vidid)
-            button = telegram_markup(_, chat_id)
-            run = await app.send_photo(
-                original_chat_id,
-                photo=img,
-                caption=_["stream_1"].format(
-                        f"https://t.me/{app.username}?start=info_{vidid}",
-                        title[:23],
-                        duration_min,
-                        user_name,
-                    ),
-                    reply_markup=InlineKeyboardMarkup(button),
-            )
+                button = stream_markup(_, vidid, chat_id)
+
+                # Construct the caption with <blockquote> (HTML formatting)
+                caption_text = _["stream_1"].format(
+                f"https://t.me/{app.username}?start=info_{vidid}",
+                title[:23],
+                duration_min,
+                user_name,
+                )
+
+               caption_text = html.escape(caption_text)
+               caption = f"<blockquote>{caption_text}</blockquote>"
+
+               run = await app.send_photo(
+               original_chat_id,
+               photo=img,
+               caption=caption,  # Use the formatted caption here
+               reply_markup=InlineKeyboardMarkup(button),
+               parse_mode=ParseMode.HTML,  # Use the ParseMode enum for HTML
+               )
             db[chat_id][0]["mystic"] = run
             db[chat_id][0]["markup"] = "tg"
     elif streamtype == "index":
