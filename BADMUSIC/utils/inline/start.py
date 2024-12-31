@@ -1,4 +1,4 @@
-from pyrogram.types import InlineKeyboardButton
+from pyrogram.types import InlineKeyboardButton, WebAppInfo
 
 import config
 from config import SUPPORT_GROUP
