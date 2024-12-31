@@ -84,9 +84,7 @@ async def start_comm(client, message: Message, _):
                     text=_["help_1"],
                     reply_markup=keyboard,
                 )
-        if name[0:4] == "song":
-            await message.reply_text(_["song_2"])
-            return
+        
         if name == "mkdwn_help":
             await message.reply(
                 MARKDOWN,
