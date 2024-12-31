@@ -107,25 +107,15 @@ async def stream(
                 run = await app.send_photo(
                     original_chat_id,
                     photo=img,
-                    caption = _["stream_1"].format(
-                    title[:27],
+                    caption=_["stream_1"].format(
                     f"https://t.me/{app.username}?start=info_{vidid}",
+                    title[:23],
                     duration_min,
                     user_name,
-               )
-    
-               # Create the quoted caption directly
-               quoted_caption = "> " + "\n> ".join(caption.splitlines())
-
-                 try:
-                     await message.reply_photo(
-                     photo=img,
-                     caption=quoted_caption,
-                     reply_markup=InlineKeyboardMarkup(button),
-                     parse_mode=ParseMode.MARKDOWN
-              )
-        except Exception as e:
-              print(f"Error sending message: {e}")
+                ),
+                reply_markup=InlineKeyboardMarkup(button),
+                parse_mode=ParseMode.HTML,
+                )
                 db[chat_id][0]["mystic"] = run
                 db[chat_id][0]["markup"] = "stream"
         if count == 0:
@@ -204,22 +194,13 @@ async def stream(
             run = await app.send_photo(
                 original_chat_id,
                 photo=img,
-                caption = _["stream_1"].format(
-                title[:27],
-                f"https://t.me/{app.username}?start=info_{vidid}",
-                duration_min,
-                user_name,
-            )
-    
-            # Create the quoted caption directly
-            quoted_caption = "> " + "\n> ".join(caption.splitlines())
-
-             try:
-                await message.reply_photo(
-                  photo=img,
-                  caption=quoted_caption,
-                  reply_markup=InlineKeyboardMarkup(button),
-                  parse_mode=ParseMode.MARKDOWN
+                caption=_["stream_1"].format(
+                        f"https://t.me/{app.username}?start=info_{vidid}",
+                        title[:23],
+                        duration_min,
+                        user_name,
+                    ),
+                    reply_markup=InlineKeyboardMarkup(button),
             )
     except Exception as e:
         print(f"Error sending message: {e}")
@@ -278,25 +259,14 @@ async def stream(
                 run = await app.send_photo(
                     original_chat_id,
                     photo=thumb,
-                    caption = _["stream_1"].format(
-                    title[:27],
-                    f"https://t.me/{app.username}?start=info_{vidid}",
-                    duration_min,
-                    user_name,
-                )
-    
-    # Create the quoted caption directly
-    quoted_caption = "> " + "\n> ".join(caption.splitlines())
-
-    try:
-        await message.reply_photo(
-            photo=img,
-            caption=quoted_caption,
-            reply_markup=InlineKeyboardMarkup(button),
-            parse_mode=ParseMode.MARKDOWN
-        )
-    except Exception as e:
-        print(f"Error sending message: {e}")     
+                    caption=_["stream_1"].format(
+                        f"https://t.me/{app.username}?start=info_{vidid}",
+                        title[:23],
+                        duration_min,
+                        user_name,
+                    ),
+                    reply_markup=InlineKeyboardMarkup(button),
+                )     
                 db[chat_id][0]["mystic"] = run
                 db[chat_id][0]["markup"] = "tg"
 
@@ -531,32 +501,14 @@ async def stream(
             run = await app.send_photo(
                 original_chat_id,
                 photo=img,
-                caption = _["stream_1"].format(
-                title[:27],
-                f"https://t.me/{app.username}?start=info_{vidid}",
-                duration_min,
-                user_name,
+                caption=_["stream_1"].format(
+                        f"https://t.me/{app.username}?start=info_{vidid}",
+                        title[:23],
+                        duration_min,
+                        user_name,
+                    ),
+                    reply_markup=InlineKeyboardMarkup(button),
             )
-
-            # ---  Markdown Quoted Caption ---
-            quoted_caption_markdown = "> " + "\n> ".join(caption.splitlines())
-    
-            # --- HTML Quoted Caption ---
-            quoted_caption_html = f"{caption}"
-
-
-        try:
-            # Send with Markdown
-               await message.reply_photo(
-               photo=img,
-               caption=quoted_caption_markdown,
-               reply_markup=InlineKeyboardMarkup(button),
-               parse_mode=ParseMode.MARKDOWN
-            )
-
-            
-    except Exception as e:
-        print(f"Error sending message: {e}")
             db[chat_id][0]["mystic"] = run
             db[chat_id][0]["markup"] = "tg"
     elif streamtype == "index":
