@@ -114,7 +114,7 @@ async def stream(
                 user_name,
                   )
 
-                    caption_text = html.escape(caption_text)
+              caption_text = html.escape(caption_text)
                     caption = f"<blockquote>{caption_text}</blockquote>"
 
                     run = await app.send_photo(
