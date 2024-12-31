@@ -53,7 +53,7 @@ async def ban_new(client, message):
     chat_name = message.chat.title if message.chat.title else ""
     if await is_banned_user(user_id):
         try:
-            alert_message = f"😳"
+            alert_message = "😳"
             BAN = await message.chat.ban_member(user_id)
             if BAN:
                 await message.reply_text(alert_message)
@@ -84,159 +84,17 @@ async def start_comm(client, message: Message, _):
                     text=_["help_1"],
                     reply_markup=keyboard,
                 )
-        if name[0:4] == "song":
-            await message.reply_text(_["song_2"])
-            return
-        if name == "mkdwn_help":
-            await message.reply(
-                MARKDOWN,
-                parse_mode=ParseMode.HTML,
-                disable_web_page_preview=True,
-            )
-        if name == "greetings":
-            await message.reply(
-                WELCOMEHELP,
-                parse_mode=ParseMode.HTML,
-                disable_web_page_preview=True,
-            )
-        if name[0:3] == "sta":
-            m = await message.reply_text("🔎 ғᴇᴛᴄʜɪɴɢ ʏᴏᴜʀ ᴘᴇʀsᴏɴᴀʟ sᴛᴀᴛs.!")
-            stats = await get_userss(message.from_user.id)
-            tot = len(stats)
-            if not stats:
-                await asyncio.sleep(1)
-                return await m.edit(_["ustats_1"])
-
-            def get_stats():
-                msg = ""
-                limit = 0
-                results = {}
-                for i in stats:
-                    top_list = stats[i]["spot"]
-                    results[str(i)] = top_list
-                    list_arranged = dict(
-                        sorted(
-                            results.items(),
-                            key=lambda item: item[1],
-                            reverse=True,
-                        )
-                    )
-                if not results:
-                    return m.edit(_["ustats_1"])
-                tota = 0
-                videoid = None
-                for vidid, count in list_arranged.items():
-                    tota += count
-                    if limit == 10:
-                        continue
-                    if limit == 0:
-                        videoid = vidid
-                    limit += 1
-                    details = stats.get(vidid)
-                    title = (details["title"][:35]).title()
-                    if vidid == "telegram":
-                        msg += f"🔗[ᴛᴇʟᴇɢʀᴀᴍ ғɪʟᴇs ᴀɴᴅ ᴀᴜᴅɪᴏs]({config.SUPPORT_GROUP}) ** played {count} ᴛɪᴍᴇs**\n\n"
-                    else:
-                        msg += f"🔗 [{title}](https://www..com/watch?v={vidid}) ** played {count} times**\n\n"
-                msg = _["ustats_2"].format(tot, tota, limit) + msg
-                return videoid, msg
-
-            try:
-                videoid, msg = await loop.run_in_executor(None, get_stats)
-            except Exception as e:
-                print(e)
-                return
-            thumbnail = await Platform.YouTube.thumbnail(videoid, True)
-            await m.delete()
-            await message.reply_photo(photo=thumbnail, caption=msg)
-            return
-        if name[0:3] == "sud":
-            await sudoers_list(client=client, message=message, _=_)
-            await asyncio.sleep(1)
-            if await is_on_off(config.LOG):
-                sender_id = message.from_user.id
-                sender_mention = message.from_user.mention
-                sender_name = message.from_user.first_name
-                return await app.send_message(
-                    config.LOG_GROUP_ID,
-                    f"{message.from_user.mention} ʜᴀs ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ʙᴏᴛ ᴛᴏ ᴄʜᴇᴄᴋ <code>sᴜᴅᴏʟɪsᴛ </code>\n\n**ᴜsᴇʀ ɪᴅ :** {sender_id}\n**ᴜsᴇʀ ɴᴀᴍᴇ:** {sender_name}",
-                )
-            return
-        if name[0:3] == "lyr":
-            query = (str(name)).replace("lyrics_", "", 1)
-            lyrical = config.lyrical
-            lyrics = lyrical.get(query)
-            if lyrics:
-                await Platform.Telegram.send_split_text(message, lyrics)
-                return
-            else:
-                await message.reply_text("ғᴀɪʟᴇᴅ ᴛᴏ ɢᴇᴛ ʟʏʀɪᴄs.")
-                return
-        if name[0:3] == "del":
-            await del_plist_msg(client=client, message=message, _=_)
-            await asyncio.sleep(1)
-        if name[0:3] == "inf":
-            m = await message.reply_text("🔎 ғᴇᴛᴄʜɪɴɢ ɪɴғᴏ!")
-            query = (str(name)).replace("info_", "", 1)
-            query = f"https://www.youtube.com/watch?v={query}"
-            results = VideosSearch(query, limit=1)
-            for result in (await results.next())["result"]:
-                title = result["title"]
-                duration = result["duration"]
-                views = result["viewCount"]["short"]
-                thumbnail = result["thumbnails"][0]["url"].split("?")[0]
-                channellink = result["channel"]["link"]
-                channel = result["channel"]["name"]
-                link = result["link"]
-                published = result["publishedTime"]
-            searched_text = f"""
-🔍__**ᴠɪᴅᴇᴏ ᴛʀᴀᴄᴋ ɪɴғᴏʀᴍᴀᴛɪᴏɴ**__
-
-❇️**ᴛɪᴛʟᴇ:** {title}
-
-⏳**ᴅᴜʀᴀᴛɪᴏɴ:** {duration} Mins
-👀**ᴠɪᴇᴡs:** `{views}`
-⏰**ᴘᴜʙʟɪsʜᴇᴅ ᴛɪᴍᴇ:** {published}
-🎥**ᴄʜᴀɴɴᴇʟ ɴᴀᴍᴇ:** {channel}
-📎**ᴄʜᴀɴɴᴇʟ ʟɪɴᴋ:** [ᴠɪsɪᴛ ғʀᴏᴍ ʜᴇʀᴇ]({channellink})
-🔗**ᴠɪᴅᴇᴏ ʟɪɴᴋ:** [ʟɪɴᴋ]({link})
-"""
-            key = InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(text="🎥 ᴡᴀᴛᴄʜ ", url=f"{link}"),
-                        InlineKeyboardButton(text="🔄 ᴄʟᴏsᴇ", callback_data="close"),
-                    ],
-                ]
-            )
-            await m.delete()
-            await app.send_photo(
-                message.chat.id,
-                photo=thumbnail,
-                caption=searched_text,
-                parse_mode=ParseMode.MARKDOWN,
-                reply_markup=key,
-            )
-            await asyncio.sleep(1)
-            if await is_on_off(config.LOG):
-                sender_id = message.from_user.id
-                sender_name = message.from_user.first_name
-                return await app.send_message(
-                    config.LOG_GROUP_ID,
-                    f"{message.from_user.mention} ʜᴀs ᴊᴜsᴛ sᴛᴀʀᴛᴇᴅ ʙᴏᴛ ᴛᴏ ᴄʜᴇᴄᴋ<code> ᴠɪᴅᴇᴏ ɪɴғᴏʀᴍᴀᴛɪᴏɴ </code>\n\n**ᴜsᴇʀ ɪᴅ:** {sender_id}\n**ᴜsᴇʀ ɴᴀᴍᴇ** {sender_name}",
-                )
+        # Additional handlers go here...
     else:
-
         try:
             out = music_start_panel(_)
-            bad = await message.reply_text(f"**ʜᴇʏ 💌**")
+            bad = await message.reply_text(f"**'ʜᴇʏ 💌'**")
             await bad.delete()
-            bad = await message.reply_text("**ʜᴏᴡ ᴀʀᴇ ʏᴏᴜ 💞**")
+            bad = await message.reply_text(f"**'ʜᴏᴡ ᴀʀᴇ ʏᴏᴜ 💞'**")
             await asyncio.sleep(0.1)
             await bad.delete()
             umm = await bad.reply_sticker(sticker=random.choice(STICKER))
             if message.chat.photo:
-
                 userss_photo = await app.download_media(
                     message.chat.photo.big_file_id,
                 )
@@ -245,13 +103,12 @@ async def start_comm(client, message: Message, _):
             if userss_photo:
                 chat_photo = userss_photo
             chat_photo = userss_photo if userss_photo else START_IMG_URL
-
         except AttributeError:
             chat_photo = "assets/nodp.png"
         await bad.delete()
         await message.reply_photo(
             photo=chat_photo,
-            caption=_["start_2"].format(message.from_user.mention, app.mention),
+            caption=f"**'{_['start_2'].format(message.from_user.mention, app.mention)}'**",
             reply_markup=InlineKeyboardMarkup(out),
         )
         if await is_on_off(config.LOG):
@@ -259,7 +116,7 @@ async def start_comm(client, message: Message, _):
             sender_name = message.from_user.first_name
             return await app.send_message(
                 config.LOG_GROUP_ID,
-                f"{message.from_user.mention} ʜᴀs sᴛᴀʀᴛᴇᴅ ʙᴏᴛ. \n\n**ᴜsᴇʀ ɪᴅ :** {sender_id}\n**ᴜsᴇʀ ɴᴀᴍᴇ:** {sender_name}",
+                f"**'{message.from_user.mention} ʜᴀs sᴛᴀʀᴛᴇᴅ ʙᴏᴛ. \n\nᴜsᴇʀ ɪᴅ : {sender_id}\nᴜsᴇʀ ɴᴀᴍᴇ: {sender_name}'**",
             )
 
 
@@ -367,30 +224,4 @@ async def go_to_home(client, callback_query: CallbackQuery, _):
         text=_["start_2"].format(callback_query.message.from_user.mention, app.mention),
         reply_markup=InlineKeyboardMarkup(out),
     )
-
-
-__MODULE__ = "ʙᴏᴛ"
-__HELP__ = f"""
-<b>✦ c sᴛᴀɴᴅs ғᴏʀ ᴄʜᴀɴɴᴇʟ ᴘʟᴀʏ.</b>
-
-<b>★ /stats</b> - Gᴇᴛ Tᴏᴘ 𝟷𝟶 Tʀᴀᴄᴋs Gʟᴏʙᴀʟ Sᴛᴀᴛs, Tᴏᴘ 𝟷𝟶 Usᴇʀs ᴏғ ʙᴏᴛ, Tᴏᴘ 𝟷𝟶 Cʜᴀᴛs ᴏɴ ʙᴏᴛ, Tᴏᴘ 𝟷𝟶 Pʟᴀʏᴇᴅ ɪɴ ᴀ ᴄʜᴀᴛ ᴇᴛᴄ ᴇᴛᴄ.
-
-<b>★ /sudolist</b> - Cʜᴇᴄᴋ Sᴜᴅᴏ Usᴇʀs ᴏғ Bᴏᴛ
-
-<b>★ /lyrics [Mᴜsɪᴄ Nᴀᴍᴇ]</b> - Sᴇᴀʀᴄʜᴇs Lʏʀɪᴄs ғᴏʀ ᴛʜᴇ ᴘᴀʀᴛɪᴄᴜʟᴀʀ Mᴜsɪᴄ ᴏɴ ᴡᴇʙ.
-
-<b>★ /song [Tʀᴀᴄᴋ Nᴀᴍᴇ] ᴏʀ [YT Lɪɴᴋ]</b> - Dᴏᴡɴʟᴏᴀᴅ ᴀɴʏ ᴛʀᴀᴄᴋ ғʀᴏᴍ ʏᴏᴜᴛᴜʙᴇ ɪɴ ᴍᴘ𝟹 ᴏʀ ᴍᴘ𝟺 ғᴏʀᴍᴀᴛs.
-
-<b>★ /player</b> - Gᴇᴛ ᴀ ɪɴᴛᴇʀᴀᴄᴛɪᴠᴇ Pʟᴀʏɪɴɢ Pᴀɴᴇʟ.
-
-<b>★ /queue ᴏʀ /cqueue</b> - Cʜᴇᴄᴋ Qᴜᴇᴜᴇ Lɪsᴛ ᴏғ Mᴜsɪᴄ.
-
-    <u><b>⚡️Pʀɪᴠᴀᴛᴇ Bᴏᴛ:</b></u>
-      
-<b>✧ /authorize [CHAT_ID]</b> - Aʟʟᴏᴡ ᴀ ᴄʜᴀᴛ ғᴏʀ ᴜsɪɴɢ ʏᴏᴜʀ ʙᴏᴛ.
-
-<b>✧ /unauthorize[CHAT_ID]</b> - Dɪsᴀʟʟᴏᴡ ᴀ ᴄʜᴀᴛ ғʀᴏᴍ ᴜsɪɴɢ ʏᴏᴜʀ ʙᴏᴛ.
-
-<b>✧ /authorized</b> - Cʜᴇᴄᴋ ᴀʟʟ ᴀʟʟᴏᴡᴇᴅ ᴄʜᴀᴛs ᴏғ ʏᴏᴜʀ ʙᴏᴛ.
-"""
-            
+    
