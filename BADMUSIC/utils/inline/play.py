@@ -1,5 +1,5 @@
 import math
-from pyrogram.types import InlineKeyboardButton
+from pyrogram.types import InlineKeyboardButton, WebAppInfo
 from BADMUSIC.utils.formatters import time_to_seconds
 
 def get_progress_bar(percentage):
@@ -26,31 +26,27 @@ def get_progress_bar(percentage):
         return "▰▰▰▰▰▰▰▰▰▰"
     else:
         return "▱▱▱▱▱▱▱▱▱"
-        
 
 def get_progress_bar2(percentage):
     umm = math.floor(percentage)
     
-    # List of progress messages
     progress_messages = [
-    "𓆩🎵𓆪  ✦ sᴘᴏᴛɪғʏ ᴘʀᴏɢʀᴇss ✦ 𓆩🎶𓆪",
-    "𓆩🎵𓆪  🎶 ᴛʜɪs sᴏɴɢ ɪs ᴠᴇʀʏ ʙᴇᴀᴜᴛɪғᴜʟ 🎶 𓆩🎶𓆪",
-    "𓆩🎵𓆪  ♪ ᴍᴇʟᴏᴅʏ ғʟᴏᴡs ᴛʜʀᴏᴜɢʜ 🎙️ 𓆩🎶𓆪",
-    "𓆩🎵𓆪  🎧 ᴘʟᴀʏɪɴɢ ʏᴏᴜʀ ғᴀᴠᴏʀɪᴛᴇ 🎥 𓆩🎶𓆪",
-    "𓆩🎵𓆪  ✨ ᴛʜᴇ ᴠɪʙᴇs ᴀʀᴇ ʀᴇᴀʟ ✨ 𓆩🎶𓆪",
-    "𓆩🎵𓆪  ⚕️ ᴇɴᴊᴏʏ ᴛʜᴇ sᴏᴜɴᴅs ⚕️ 𓆩🎶𓆪",
-    "𓆩🎵𓆪  ✩ ʏᴏᴜʀ ᴍᴜsɪᴄ sᴇssɪᴏɴ ✩ 𓆩🎶𓆪",
-    "𓆩🎵𓆪  ❤️ ғᴇᴇʟɪɴɢ ᴛʜᴇ ʙᴇᴀᴛs ❤️ 𓆩🎶𓆪",
-    "𓆩🎵𓆪  🎧 ᴛʜᴀɴᴋs ғᴏʀ ᴜsɪɴɢ sᴘᴏᴛɪғʏ ᴍᴜsɪᴄ 🎧 𓆩🎶𓆪",
-    "𓆩🎵𓆪  ✩ ᴀʟᴍᴏsᴛ ᴅᴏɴᴇ ᴘʟᴀʏɪɴɢ ✩ 𓆩🎶𓆪",
+        "𓆩🎵𓆪  ✦ sᴘᴏᴛɪғʏ ᴘʀᴏɢʀᴇss ✦ 𓆩🎶𓆪",
+        "𓆩🎵𓆪  🎶 ᴛʜɪs sᴏɴɢ ɪs ᴠᴇʀʏ ʙᴇᴀᴜᴛɪғᴜʟ 🎶 𓆩🎶𓆪",
+        "𓆩🎵𓆪  ♪ ᴍᴇʟᴏᴅʏ ғʟᴏᴡs ᴛʜʀᴏᴜɢʜ 🎙️ 𓆩🎶𓆪",
+        "𓆩🎵𓆪  🎧 ᴘʟᴀʏɪɴɢ ʏᴏᴜʀ ғᴀᴠᴏʀɪᴛᴇ 🎥 𓆩🎶𓆪",
+        "𓆩🎵𓆪  ✨ ᴛʜᴇ ᴠɪʙᴇs ᴀʀᴇ ʀᴇᴀʟ ✨ 𓆩🎶𓆪",
+        "𓆩🎵𓆪  ⚕️ ᴇɴᴊᴏʏ ᴛʜᴇ sᴏᴜɴᴅs ⚕️ 𓆩🎶𓆪",
+        "𓆩🎵𓆪  ✩ ʏᴏᴜʀ ᴍᴜsɪᴄ sᴇssɪᴏɴ ✩ 𓆩🎶𓆪",
+        "𓆩🎵𓆪  ❤️ ғᴇᴇʟɪɴɢ ᴛʜᴇ ʙᴇᴀᴛs ❤️ 𓆩🎶𓆪",
+        "𓆩🎵𓆪  🎧 ᴛʜᴀɴᴋs ғᴏʀ ᴜsɪɴɢ sᴘᴏᴛɪғʏ ᴍᴜsɪᴄ 🎧 𓆩🎶𓆪",
+        "𓆩🎵𓆪  ✩ ᴀʟᴍᴏsᴛ ᴅᴏɴᴇ ᴘʟᴀʏɪɴɢ ✩ 𓆩🎶𓆪",
     ]
     
     if umm < 100:
-        # Show the progress messages during song play
-        index = umm // 10  # Calculate the message index
+        index = umm // 10
         return progress_messages[index % len(progress_messages)]
     else:
-        # Show the song end message when the progress reaches 100%
         return "𓆩🎵𓆪  ꜱοиg ɪѕ ᴀϐουτ ᴛο ᴇи∂ 𓆩🎶𓆪"
 
 def stream_markup_timer(_, videoid, chat_id, played, dur):
@@ -58,8 +54,8 @@ def stream_markup_timer(_, videoid, chat_id, played, dur):
     duration_sec = time_to_seconds(dur)
     percentage = (played_sec / duration_sec) * 100
 
-    bar = get_progress_bar(percentage)  # Original progress bar
-    timer_selection = get_progress_bar2(percentage)  # Updated to new function
+    bar = get_progress_bar(percentage)
+    timer_selection = get_progress_bar2(percentage)
 
     buttons = [
         [
@@ -81,6 +77,12 @@ def stream_markup_timer(_, videoid, chat_id, played, dur):
             InlineKeyboardButton(
                 text=timer_selection,
                 callback_data="GetTimerAnimation",
+            ),
+        ],
+        [
+            InlineKeyboardButton(
+                text="ꜱᴘᴏᴛɪꜰʏ",
+                web_app=WebAppInfo(url="https://open.spotify.com/"),
             ),
         ],
         [
