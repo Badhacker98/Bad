@@ -26,9 +26,8 @@ def get_progress_bar(percentage):
         return "▰▰▰▰▰▰▰▰▰▰"
     else:
         return "▱▱▱▱▱▱▱▱▱"
-
-
-def get_timer_selection(percentage):
+        
+def get_progress_bar2(percentage):
     umm = math.floor(percentage)
     if 0 < umm <= 10:
         return "▰▱▱▱▱▱▱▱▱"
@@ -52,15 +51,23 @@ def get_timer_selection(percentage):
         return "▰▰▰▰▰▰▰▰▰▰"
     else:
         return "▱▱▱▱▱▱▱▱▱"
-    
+
+def get_timer_selection(percentage):
+    # Adjusted to dynamically return a timer string with a percentage
+    umm = math.floor(percentage)
+    if 0 <= umm <= 100:
+        completed = umm // 10
+        remaining = 10 - completed
+        return f"🎶{'▰' * completed}{'▱' * remaining}  {umm}%"
+    return "🎶▱▱▱▱▱▱▱▱▱  0%"
 
 def stream_markup_timer(_, videoid, chat_id, played, dur):
     played_sec = time_to_seconds(played)
     duration_sec = time_to_seconds(dur)
     percentage = (played_sec / duration_sec) * 100
 
-    bar = get_progress_bar(percentage)  # Get the progress bar
-    timer_selection = get_timer_selection()  # Get timer selection
+    bar = get_progress_bar(percentage)  # Original progress bar
+    timer_selection = get_progress_bar2(percentage)  # Updated to new function
 
     buttons = [
         [
@@ -80,7 +87,7 @@ def stream_markup_timer(_, videoid, chat_id, played, dur):
         ],
         [
             InlineKeyboardButton(
-                text=timer_selection[played_sec % len(timer_selection)],
+                text=timer_selection,
                 callback_data="GetTimerAnimation",
             ),
         ],
@@ -120,8 +127,8 @@ def telegram_markup_timer(_, chat_id, played, dur):
     duration_sec = time_to_seconds(dur)
     percentage = (played_sec / duration_sec) * 100
 
-    bar = get_progress_bar(percentage)  # Get the progress bar
-    timer_selection = get_timer_selection()  # Get timer selection
+    bar = get_progress_bar(percentage)  # Original progress bar
+    timer_selection = get_progress_bar2(percentage)  # Updated to new function
 
     buttons = [
         [
@@ -138,7 +145,7 @@ def telegram_markup_timer(_, chat_id, played, dur):
         ],
         [
             InlineKeyboardButton(
-                text=timer_selection[played_sec % len(timer_selection)],
+                text=timer_selection,
                 callback_data="GetTimerAnimation",
             ),
         ],
