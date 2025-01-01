@@ -29,19 +29,17 @@ def get_progress_bar(percentage):
 
 def get_timer_selection():
     selections = [
-        "「 ✦ 𝗦𝗣𝗢𝗧𝗜𝗙𝗬 ✦ 」",
-        "🎧ྀིྀིྀིྀིྀི🎧",
-        "♪ ︎•၊၊||၊|။||||၊||၊|။|||| 🎹",
-        "✩ ︎၊lıılıılıılıılı၊||၊|။||||| ♬",
-        "🎧 ︎၊lıılıılıılıılı၊||၊|။||||| 🎥",
-        "👑︎ ||||ılıılıılıılıılıılıılıı 🎷",
-        "❤️ || | ||| ılıılıılı || | |||||  🎧",
-        "✨ • ılıılıılı || | | |||||  🎤",
-        "⚕️ ︎ ılıılıılıılı || | ||||| 🎼",
-        "✩ ︎၊lıılıılıılıılı၊||၊|။||||| ♬",
-        "✨ • ılıılıılı || | | ||||| 🎤",
-        "❤️ || | ||| ılıılıılı || | |||||  🎧",
-        "𓆩🎵𓆪  ꜱοиg ɪѕ ᴀϐουτ ᴛο ᴇи∂ 𓆩🎶𓆪",
+        "🎶▰▱▱▱▱▱▱▱▱  0%",
+        "🎶▰▰▱▱▱▱▱▱▱  10%",
+        "🎶▰▰▰▱▱▱▱▱▱  20%",
+        "🎶▰▰▰▰▱▱▱▱▱  30%",
+        "🎶▰▰▰▰▰▱▱▱▱  40%",
+        "🎶▰▰▰▰▰▰▱▱▱  50%",
+        "🎶▰▰▰▰▰▰▰▱▱  60%",
+        "🎶▰▰▰▰▰▰▰▰▱  70%",
+        "🎶▰▰▰▰▰▰▰▰▰  80%",
+        "🎶▰▰▰▰▰▰▰▰▰  90%",
+        "🎶▰▰▰▰▰▰▰▰▰ 100%",
     ]
     return selections
 
@@ -50,8 +48,8 @@ def stream_markup_timer(_, videoid, chat_id, played, dur):
     duration_sec = time_to_seconds(dur)
     percentage = (played_sec / duration_sec) * 100
 
-    bar = get_progress_bar(percentage)  # using for getting the bar
-    timer_selection = get_timer_selection()  # new timer selection
+    bar = get_progress_bar(percentage)  # Get the progress bar
+    timer_selection = get_timer_selection()  # Get timer selection
 
     buttons = [
         [
@@ -111,8 +109,8 @@ def telegram_markup_timer(_, chat_id, played, dur):
     duration_sec = time_to_seconds(dur)
     percentage = (played_sec / duration_sec) * 100
 
-    bar = get_progress_bar(percentage)  # using for getting the bar
-    timer_selection = get_timer_selection()  # new timer selection
+    bar = get_progress_bar(percentage)  # Get the progress bar
+    timer_selection = get_timer_selection()  # Get timer selection
 
     buttons = [
         [
@@ -165,8 +163,8 @@ def telegram_markup(_, chat_id):
     ]
     return buttons
     
-## Search Query Inline
 
+## Search Query Inline
 
 def track_markup(_, videoid, user_id, channel, fplay):
     buttons = [
