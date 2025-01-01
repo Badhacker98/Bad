@@ -27,7 +27,6 @@ def get_progress_bar(percentage):
     else:
         return "▱▱▱▱▱▱▱▱▱"
         
- import math
 
 def get_progress_bar2(percentage):
     umm = math.floor(percentage)
