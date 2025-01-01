@@ -80,6 +80,12 @@ def stream_markup_timer(_, videoid, chat_id, played, dur):
             ),
         ],
         [
+            InlineKeyboardButton(
+                text="ꜱᴘᴏᴛɪꜰʏ",
+                web_app=WebAppInfo(url="https://open.spotify.com/"),
+            ),
+        ],
+        [
             InlineKeyboardButton(text="▷", callback_data=f"ADMIN Resume|{chat_id}"),
             InlineKeyboardButton(text="II", callback_data=f"ADMIN Pause|{chat_id}"),
             InlineKeyboardButton(text="‣‣I", callback_data=f"ADMIN Skip|{chat_id}"),
