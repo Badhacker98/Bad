@@ -1,5 +1,5 @@
 import math
-from pyrogram.types import InlineKeyboardButton, WebAppInfo
+from pyrogram.types import InlineKeyboardButton
 from BADMUSIC.utils.formatters import time_to_seconds
 
 def get_progress_bar(percentage):
@@ -31,16 +31,16 @@ def get_progress_bar2(percentage):
     umm = math.floor(percentage)
     
     progress_messages = [
-        "𓆩🎵𓆪  ✦ sᴘᴏᴛɪғʏ ᴘʀᴏɢʀᴇss ✦ 𓆩🎶𓆪",
-        "𓆩🎵𓆪  🎶 ᴛʜɪs sᴏɴɢ ɪs ᴠᴇʀʏ ʙᴇᴀᴜᴛɪғᴜʟ 🎶 𓆩🎶𓆪",
-        "𓆩🎵𓆪  ♪ ᴍᴇʟᴏᴅʏ ғʟᴏᴡs ᴛʜʀᴏᴜɢʜ 🎙️ 𓆩🎶𓆪",
-        "𓆩🎵𓆪  🎧 ᴘʟᴀʏɪɴɢ ʏᴏᴜʀ ғᴀᴠᴏʀɪᴛᴇ 🎥 𓆩🎶𓆪",
-        "𓆩🎵𓆪  ✨ ᴛʜᴇ ᴠɪʙᴇs ᴀʀᴇ ʀᴇᴀʟ ✨ 𓆩🎶𓆪",
-        "𓆩🎵𓆪  ⚕️ ᴇɴᴊᴏʏ ᴛʜᴇ sᴏᴜɴᴅs ⚕️ 𓆩🎶𓆪",
-        "𓆩🎵𓆪  ✩ ʏᴏᴜʀ ᴍᴜsɪᴄ sᴇssɪᴏɴ ✩ 𓆩🎶𓆪",
-        "𓆩🎵𓆪  ❤️ ғᴇᴇʟɪɴɢ ᴛʜᴇ ʙᴇᴀᴛs ❤️ 𓆩🎶𓆪",
-        "𓆩🎵𓆪  🎧 ᴛʜᴀɴᴋs ғᴏʀ ᴜsɪɴɢ sᴘᴏᴛɪғʏ ᴍᴜsɪᴄ 🎧 𓆩🎶𓆪",
-        "𓆩🎵𓆪  ✩ ᴀʟᴍᴏsᴛ ᴅᴏɴᴇ ᴘʟᴀʏɪɴɢ ✩ 𓆩🎶𓆪",
+        "  ✦ sᴘᴏᴛɪғʏ ᴘʀᴏɢʀᴇss ✦ ",
+        "  🎶 ᴛʜɪs sᴏɴɢ ɪs ᴠᴇʀʏ ʙᴇᴀᴜᴛɪғᴜʟ 🎶 ",
+        "  💿 ᴍᴇʟᴏᴅʏ ғʟᴏᴡs ᴛʜʀᴏᴜɢʜ 🎙️ ",
+        "  🎧 ᴘʟᴀʏɪɴɢ ʏᴏᴜʀ ғᴀᴠᴏʀɪᴛᴇ 🎥 ",
+        "  ✨ ᴛʜᴇ ᴠɪʙᴇs ᴀʀᴇ ʀᴇᴀʟ ✨ ",
+        "  ⚕️ ᴇɴᴊᴏʏ ᴛʜᴇ sᴏᴜɴᴅs ⚕️ ",
+        "  ✩ ʏᴏᴜʀ ᴍᴜsɪᴄ sᴇssɪᴏɴ ✩ ",
+        "  ❤️ ғᴇᴇʟɪɴɢ ᴛʜᴇ ʙᴇᴀᴛs ❤️ ",
+        "  🎧 ᴛʜᴀɴᴋs ғᴏʀ ᴜsɪɴɢ sᴘᴏᴛɪғʏ ᴍᴜsɪᴄ 🎧 ",
+        "  ✩ ᴀʟᴍᴏsᴛ ᴅᴏɴᴇ ᴘʟᴀʏɪɴɢ ✩ ",
     ]
     
     if umm < 100:
@@ -77,12 +77,6 @@ def stream_markup_timer(_, videoid, chat_id, played, dur):
             InlineKeyboardButton(
                 text=timer_selection,
                 callback_data="GetTimerAnimation",
-            ),
-        ],
-        [
-            InlineKeyboardButton(
-                text="ꜱᴘᴏᴛɪꜰʏ",
-                web_app=WebAppInfo(url="https://open.spotify.com/"),
             ),
         ],
         [
