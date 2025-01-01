@@ -52,7 +52,7 @@ def get_dynamic_progress_bar(percentage):
 
 
 # Stream Markup with Two Timers
-def stream_markup_two_timers(_, videoid, chat_id, played1, dur1, played2, dur2):
+def stream_markup(_, videoid, chat_id, played1, dur1, played2, dur2):
     # Timer 1
     played_sec1 = time_to_seconds(played1)
     duration_sec1 = time_to_seconds(dur1)
@@ -101,7 +101,7 @@ def stream_markup_two_timers(_, videoid, chat_id, played1, dur1, played2, dur2):
 
 
 # Telegram Markup with Two Timers
-def telegram_markup_two_timers(_, chat_id, played1, dur1, played2, dur2):
+def telegram_markup(_, chat_id, played1, dur1, played2, dur2):
     # Timer 1
     played_sec1 = time_to_seconds(played1)
     duration_sec1 = time_to_seconds(dur1)
@@ -120,12 +120,6 @@ def telegram_markup_two_timers(_, chat_id, played1, dur1, played2, dur2):
                 text=f"Timer 1: {played1} {bar1} {dur1}",
                 callback_data="GetTimer1",
             )
-        ],
-        [
-            InlineKeyboardButton(
-                text=_["PL_B_3"],
-                callback_data=f"PanelMarkup None|{chat_id}",
-            ),
         ],
         [
             InlineKeyboardButton(
