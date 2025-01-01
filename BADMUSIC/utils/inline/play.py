@@ -54,14 +54,6 @@ def get_progress_bar2(percentage):
     else:
         return "𓆩🎵𓆪  ꜱοиg ɪѕ ᴀϐουτ ᴛο ᴇи∂ 𓆩🎶𓆪"
 
-def get_timer_selection(percentage):
-    # Adjusted to dynamically return a timer string with a percentage
-    umm = math.floor(percentage)
-    if 0 <= umm <= 100:
-        completed = umm // 10
-        remaining = 10 - completed
-        return f"🎶{'▰' * completed}{'▱' * remaining}  {umm}%"
-    return "🎶▱▱▱▱▱▱▱▱▱  0%"
 
 def stream_markup_timer(_, videoid, chat_id, played, dur):
     played_sec = time_to_seconds(played)
