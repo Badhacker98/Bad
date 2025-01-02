@@ -48,7 +48,7 @@ def draw_progress_bar(draw, x, y, width, height, progress, bg_color="white", fil
     draw.rectangle([x, y, x + width, y + height], fill=bg_color)  # Background
     draw.rectangle([x, y, x + int(width * progress), y + height], fill=fill_color)  # Progress
 
-async def gen_thumb(videoid, current_position, total_duration):
+async def gen_thumb(videoid, current_position=0, total_duration=1):
     if os.path.isfile(f"cache/{videoid}_v4.png"):
         return f"cache/{videoid}_v4.png"
 
@@ -107,7 +107,7 @@ async def gen_thumb(videoid, current_position, total_duration):
     return f"cache/{videoid}_v4.png"
 
 
-async def gen_qthumb(vidid, current_position, total_duration):
+async def gen_qthumb(videoid, current_position=0, total_duration=1):
     if os.path.isfile(f"cache/{vidid}_v4.png"):
         return f"cache/{vidid}_v4.png"
 
