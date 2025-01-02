@@ -78,7 +78,7 @@ def music_start_panel(_):
         [
             InlineKeyboardButton(text="▪️ᴀʙᴏᴜᴛ▪️", callback_data="about"),
             InlineKeyboardButton(text="▪️sᴜᴘᴘᴏʀᴛ▪️", callback_data="support"),
-        ]
+        ],
         [
             InlineKeyboardButton(text="▪️ꜱᴘᴏᴛɪꜰʏ▪️", web_app=WebAppInfo(url="https://open.spotify.com/"),)
             
