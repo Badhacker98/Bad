@@ -346,7 +346,7 @@ async def about_callback(client: Client, callback_query: CallbackQuery):
         ],  # Use a default label for the back button
     ]
     await callback_query.message.edit_text(
-        "Returning to about options...", reply_markup=InlineKeyboardMarkup(buttons)
+        "<blockquote>ʀᴇᴛᴜʀɴɪɴɢ ᴛᴏ ᴀʙᴏᴜᴛ ᴏᴘᴛɪᴏɴꜱ...<blockquote>", reply_markup=InlineKeyboardMarkup(buttons)
     )
 
 
