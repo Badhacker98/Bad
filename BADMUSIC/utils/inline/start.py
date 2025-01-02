@@ -71,7 +71,7 @@ def music_start_panel(_):
     buttons = [
         [
             InlineKeyboardButton(
-                text="💠 ᴀᴅᴅ ᴍᴇ ɪɴ ɴᴇᴡ ɢʀᴏᴜᴘ 💠",
+                text="▪️ᴀᴅᴅ ᴍᴇ ɪɴ ɴᴇᴡ ɢʀᴏᴜᴘ▪️",
                 url=f"https://t.me/{app.username}?startgroup=true",
             )
         ],
