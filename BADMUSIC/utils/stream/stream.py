@@ -139,77 +139,79 @@ async def stream(
             )
 
     elif streamtype == "youtube":
-        link = result["link"]
-        vidid = result["vidid"]
-        title = (result["title"]).title()
-        duration_min = result["duration_min"]
-        duration_sec = result["duration_sec"]  # Added duration in seconds
-        thumbnail = result["thumb"]
-        status = True if video else None
-        try:
-            file_path, direct = await Platform.youtube.download(
-                vidid, mystic, videoid=True, video=status
-            )
-        except Exception:
-            raise AssistantErr(_["play_16"])
-        if await is_active_chat(chat_id):
-            await put_queue(
-                chat_id,
-                original_chat_id,
-                file_path if direct else f"vid_{vidid}",
-                title,
+    link = result["link"]
+    vidid = result["vidid"]
+    title = (result["title"]).title()
+    duration_min = result.get("duration_min", "Unknown")  # Default to "Unknown" if missing
+    duration_sec = result.get("duration_sec", 0)  # Default to 0 if missing
+    thumbnail = result["thumb"]
+    status = True if video else None
+
+    try:
+        file_path, direct = await Platform.youtube.download(
+            vidid, mystic, videoid=True, video=status
+        )
+    except Exception:
+        raise AssistantErr(_["play_16"])
+
+    if await is_active_chat(chat_id):
+        await put_queue(
+            chat_id,
+            original_chat_id,
+            file_path if direct else f"vid_{vidid}",
+            title,
+            duration_min,
+            user_name,
+            vidid,
+            user_id,
+            "video" if video else "audio",
+        )
+        position = len(db.get(chat_id)) - 1
+        qimg = await gen_qthumb(vidid)
+        run = await app.send_photo(
+            original_chat_id,
+            photo=qimg,
+            caption=_["queue_4"].format(
+                position, title[:27], duration_min, user_name
+            ),
+            reply_markup=close_markup(_),
+        )
+    else:
+        if not forceplay:
+            db[chat_id] = []
+        await BAD.join_call(
+            chat_id, original_chat_id, file_path, video=status, image=thumbnail
+        )
+        await put_queue(
+            chat_id,
+            original_chat_id,
+            file_path if direct else f"vid_{vidid}",
+            title,
+            duration_min,
+            user_name,
+            vidid,
+            user_id,
+            "video" if video else "audio",
+            forceplay=forceplay,
+        )
+        current_position = 0  # Starting position
+        total_duration = duration_sec  # Use duration_sec as total duration
+        img = await gen_thumb(vidid, current_position, total_duration)
+        button = stream_markup(_, vidid, chat_id)
+        run = await app.send_photo(
+            original_chat_id,
+            photo=img,
+            caption=_["stream_1"].format(
+                title[:27],
+                f"https://t.me/{app.username}?start=info_{vidid}",
                 duration_min,
                 user_name,
-                vidid,
-                user_id,
-                "video" if video else "audio",
-            )
-            position = len(db.get(chat_id)) - 1
-            qimg = await gen_qthumb(vidid)
-            run = await app.send_photo(
-                original_chat_id,
-                photo=qimg,
-                caption=_["queue_4"].format(
-                    position, title[:27], duration_min, user_name
-                ),
-                reply_markup=close_markup(_),
-            )
-        else:
-            if not forceplay:
-                db[chat_id] = []
-            await BAD.join_call(
-                chat_id, original_chat_id, file_path, video=status, image=thumbnail
-            )
-            await put_queue(
-                chat_id,
-                original_chat_id,
-                file_path if direct else f"vid_{vidid}",
-                title,
-                duration_min,
-                user_name,
-                vidid,
-                user_id,
-                "video" if video else "audio",
-                forceplay=forceplay,
-            )
-            # Default values for current_position and total_duration
-            current_position = 0
-            total_duration = duration_sec  # Use fetched video duration
-            img = await gen_thumb(vidid, current_position, total_duration)
-            button = stream_markup(_, vidid, chat_id)
-            run = await app.send_photo(
-                original_chat_id,
-                photo=img,
-                caption=_["stream_1"].format(
-                    title[:27],
-                    f"https://t.me/{app.username}?start=info_{vidid}",
-                    duration_min,
-                    user_name,
-                ),
-                reply_markup=InlineKeyboardMarkup(button),
-            )
-            db[chat_id][0]["mystic"] = run
-            db[chat_id][0]["markup"] = "stream"
+            ),
+            reply_markup=InlineKeyboardMarkup(button),
+        )
+        db[chat_id][0]["mystic"] = run
+        db[chat_id][0]["markup"] = "stream"
+            
     elif "saavn" in streamtype:
         if streamtype == "saavn_track":
             if result["duration_sec"] == 0:
