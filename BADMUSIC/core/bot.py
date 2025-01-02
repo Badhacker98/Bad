@@ -61,7 +61,7 @@ class BADBOT(Client):
                         [
             InlineKeyboardButton(
                 text="๏ ꜱᴛᴀʀᴛ ᴛᴏ ᴘᴍ ๏",
-                url=f"https://t.me/{app.username}",
+                url=f"https://t.me/{self.username}",
             ),
            ],
              [
