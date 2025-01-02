@@ -11,7 +11,7 @@ ffmpeg-python
 gitpython
 hachoir
 heroku3
-httpx[http2.27.2]
+httpx==0.23.0
 httpcore==1.0.6
 lyricsgenius
 motor==2.5.0
