@@ -37,8 +37,7 @@ def crop_center_circle(img, output_size, border, crop_scale=1.5):
     img = img.crop((
         half_the_width - larger_size/2,
         half_the_height - larger_size/2,
-        half_the_width + larger_size/2,
-        half_the_height + larger_size/2
+        half_the_width + larger_size/2
     ))
     img = img.resize((output_size - 2*border, output_size - 2*border))
     final_img = Image.new("RGBA", (output_size, output_size), "white")
@@ -61,7 +60,8 @@ async def gen_thumb(videoid):
 
     url = f"https://www.youtube.com/watch?v={videoid}"
     results = VideosSearch(url, limit=1)
-    for result in (await results.next())["result"]:
+    search_results = await results.next()
+    for result in search_results["result"]:
         title = result.get("title", "Unsupported Title")
         title = re.sub("\W+", " ", title).title()
         duration = result.get("duration", "Unknown Mins")
@@ -101,7 +101,7 @@ async def gen_thumb(videoid):
 
     try:
         os.remove(f"cache/thumb{videoid}.png")
-    except:
+    except FileNotFoundError:
         pass
 
     background.save(f"cache/{videoid}_v4.png")
@@ -114,7 +114,8 @@ async def gen_qthumb(vidid):
 
     url = f"https://www.youtube.com/watch?v={vidid}"
     results = VideosSearch(url, limit=1)
-    for result in (await results.next())["result"]:
+    search_results = await results.next()
+    for result in search_results["result"]:
         title = result.get("title", "Unsupported Title")
         title = re.sub("\W+", " ", title).title()
         duration = result.get("duration", "Unknown Mins")
@@ -154,7 +155,7 @@ async def gen_qthumb(vidid):
 
     try:
         os.remove(f"cache/thumb{vidid}.png")
-    except:
+    except FileNotFoundError:
         pass
 
     background.save(f"cache/{vidid}_v4.png")
