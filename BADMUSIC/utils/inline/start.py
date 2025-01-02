@@ -46,6 +46,12 @@ def private_panel(_):
 
 def alive_panel(_):
     buttons = [
+            [
+            InlineKeyboardButton(
+                text="📩 ꜱᴛᴀʀᴛ ᴘᴍ",
+                url=f"https://t.me/{app.username}",
+            ),
+        ],
         [
             InlineKeyboardButton(
                 text="✿︎ ᴀᴅᴅ ᴍᴇ ✿︎", url=f"https://t.me/{app.username}?startgroup=true"
@@ -58,6 +64,7 @@ def alive_panel(_):
         ],
     ]
     return buttons
+    
 
 
 def music_start_panel(_):
