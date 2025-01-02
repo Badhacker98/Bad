@@ -48,11 +48,11 @@ def draw_progress_bar(draw, x, y, width, height, progress, bg_color="white", fil
     draw.rectangle([x, y, x + width, y + height], fill=bg_color)  # Background
     draw.rectangle([x, y, x + int(width * progress), y + height], fill=fill_color)  # Progress
 
-async def gen_thumb(videoid, current_position=0, total_duration=1):
-    if os.path.isfile(f"cache/{videoid}_v4.png"):
-        return f"cache/{videoid}_v4.png"
+async def gen_thumb(vidid, current_position=0, total_duration=1):
+    if os.path.isfile(f"cache/{vidid}_v4.png"):
+        return f"cache/{vidid}_v4.png"
 
-    url = f"https://www.youtube.com/watch?v={videoid}"
+    url = f"https://www.youtube.com/watch?v={vidid}"
     results = VideosSearch(url, limit=1)
     for result in (await results.next())["result"]:
         title = re.sub("\W+", " ", result.get("title", "Unsupported Title")).title()
@@ -64,11 +64,11 @@ async def gen_thumb(videoid, current_position=0, total_duration=1):
     async with aiohttp.ClientSession() as session:
         async with session.get(thumbnail) as resp:
             if resp.status == 200:
-                f = await aiofiles.open(f"cache/thumb{videoid}.png", mode="wb")
+                f = await aiofiles.open(f"cache/thumb{vidid}.png", mode="wb")
                 await f.write(await resp.read())
                 await f.close()
 
-    youtube = Image.open(f"cache/thumb{videoid}.png")
+    youtube = Image.open(f"cache/thumb{vidid}.png")
     image1 = changeImageSize(1280, 720, youtube)
     background = image1.convert("RGBA").filter(ImageFilter.BoxBlur(20))
     enhancer = ImageEnhance.Brightness(background)
@@ -99,15 +99,15 @@ async def gen_thumb(videoid, current_position=0, total_duration=1):
 
     # Clean up
     try:
-        os.remove(f"cache/thumb{videoid}.png")
+        os.remove(f"cache/thumb{vidid}.png")
     except:
         pass
 
-    background.save(f"cache/{videoid}_v4.png")
-    return f"cache/{videoid}_v4.png"
+    background.save(f"cache/{vidid}_v4.png")
+    return f"cache/{vidid}_v4.png"
 
 
-async def gen_qthumb(videoid, current_position=0, total_duration=1):
+async def gen_qthumb(vidid, current_position=0, total_duration=1):
     if os.path.isfile(f"cache/{vidid}_v4.png"):
         return f"cache/{vidid}_v4.png"
 
