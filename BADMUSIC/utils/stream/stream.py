@@ -102,7 +102,10 @@ async def stream(
                     "video" if video else "audio",
                     forceplay=forceplay,
                 )
-                img = await gen_thumb(vidid)
+                # Default values for current_position and total_duration
+                current_position = 0
+                total_duration = duration_sec  # Use fetched video duration
+                img = await gen_thumb(vidid, current_position, total_duration)
                 button = stream_markup(_, vidid, chat_id)
                 run = await app.send_photo(
                     original_chat_id,
@@ -140,6 +143,7 @@ async def stream(
         vidid = result["vidid"]
         title = (result["title"]).title()
         duration_min = result["duration_min"]
+        duration_sec = result["duration_sec"]  # Added duration in seconds
         thumbnail = result["thumb"]
         status = True if video else None
         try:
@@ -188,6 +192,9 @@ async def stream(
                 "video" if video else "audio",
                 forceplay=forceplay,
             )
+            # Default values for current_position and total_duration
+            current_position = 0
+            total_duration = duration_sec  # Use fetched video duration
             img = await gen_thumb(vidid, current_position, total_duration)
             button = stream_markup(_, vidid, chat_id)
             run = await app.send_photo(
@@ -203,7 +210,6 @@ async def stream(
             )
             db[chat_id][0]["mystic"] = run
             db[chat_id][0]["markup"] = "stream"
-
     elif "saavn" in streamtype:
         if streamtype == "saavn_track":
             if result["duration_sec"] == 0:
