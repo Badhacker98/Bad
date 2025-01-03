@@ -3,9 +3,7 @@ import os
 import re
 import aiofiles
 import aiohttp
-from BADMUSIC import app
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
-from unidecode import unidecode
 from youtubesearchpython.__future__ import VideosSearch
 
 # Helper Functions
@@ -20,11 +18,11 @@ def changeImageSize(maxWidth, maxHeight, image):
 def truncate(text):
     words = text.split(" ")
     text1 = ""
-    text2 = ""    
+    text2 = ""
     for word in words:
-        if len(text1) + len(word) < 30:        
+        if len(text1) + len(word) < 30:
             text1 += " " + word
-        elif len(text2) + len(word) < 30:       
+        elif len(text2) + len(word) < 30:
             text2 += " " + word
     return [text1.strip(), text2.strip()]
 
@@ -52,60 +50,65 @@ def draw_progress_bar(draw, x, y, width, height, progress, bg_color="white", fil
 
 # Main Thumbnail Generator
 async def gen_thumb(vidid, current_position, total_duration):
-    # Fetch video metadata
-    url = f"https://www.youtube.com/watch?v={vidid}"
-    results = VideosSearch(url, limit=1)
-    for result in (await results.next())["result"]:
+    try:
+        # Fetch video metadata
+        url = f"https://www.youtube.com/watch?v={vidid}"
+        results = VideosSearch(url, limit=1)
+        result = (await results.next())["result"][0]
+
         title = re.sub("\W+", " ", result.get("title", "Unsupported Title")).title()
         duration = result.get("duration", "Unknown Mins")
         thumbnail = result["thumbnails"][0]["url"].split("?")[0]
         views = result.get("viewCount", {}).get("short", "Unknown Views")
         channel = result.get("channel", {}).get("name", "Unknown Channel")
 
-    # Download thumbnail
-    async with aiohttp.ClientSession() as session:
-        async with session.get(thumbnail) as resp:
-            if resp.status == 200:
-                f = await aiofiles.open(f"cache/thumb{vidid}.png", mode="wb")
-                await f.write(await resp.read())
-                await f.close()
+        # Download thumbnail
+        async with aiohttp.ClientSession() as session:
+            async with session.get(thumbnail) as resp:
+                if resp.status == 200:
+                    f = await aiofiles.open(f"cache/thumb{vidid}.png", mode="wb")
+                    await f.write(await resp.read())
+                    await f.close()
 
-    # Open and process thumbnail
-    youtube = Image.open(f"cache/thumb{vidid}.png")
-    image1 = changeImageSize(1280, 720, youtube)
-    background = image1.convert("RGBA").filter(ImageFilter.BoxBlur(20))
-    enhancer = ImageEnhance.Brightness(background)
-    background = enhancer.enhance(0.6)
-    draw = ImageDraw.Draw(background)
+        # Open and process thumbnail
+        youtube = Image.open(f"cache/thumb{vidid}.png")
+        image1 = changeImageSize(1280, 720, youtube)
+        background = image1.convert("RGBA").filter(ImageFilter.BoxBlur(20))
+        enhancer = ImageEnhance.Brightness(background)
+        background = enhancer.enhance(0.6)
+        draw = ImageDraw.Draw(background)
 
-    # Fonts
-    font_title = ImageFont.truetype("assets/Bad/font3.ttf", 45)
-    font_text = ImageFont.truetype("assets/Bad/font2.ttf", 30)
+        # Fonts
+        font_title = ImageFont.truetype("assets/Bad/font3.ttf", 45)
+        font_text = ImageFont.truetype("assets/Bad/font2.ttf", 30)
 
-    # Circular thumbnail
-    circle_thumbnail = crop_center_circle(youtube, 400, 20)
-    background.paste(circle_thumbnail, (120, 160), circle_thumbnail)
+        # Circular thumbnail
+        circle_thumbnail = crop_center_circle(youtube, 400, 20)
+        background.paste(circle_thumbnail, (120, 160), circle_thumbnail)
 
-    # Title and Info
-    title_lines = truncate(title)
-    draw.text((565, 180), title_lines[0], fill=(255, 255, 255), font=font_title)
-    draw.text((565, 230), title_lines[1], fill=(255, 255, 255), font=font_title)
-    draw.text((565, 320), f"{channel}  |  {views[:23]}", fill=(255, 255, 255), font=font_text)
+        # Title and Info
+        title_lines = truncate(title)
+        draw.text((565, 180), title_lines[0], fill=(255, 255, 255), font=font_title)
+        draw.text((565, 230), title_lines[1], fill=(255, 255, 255), font=font_title)
+        draw.text((565, 320), f"{channel}  |  {views[:23]}", fill=(255, 255, 255), font=font_text)
 
-    # Progress Bar
-    progress = current_position / total_duration if total_duration > 0 else 0
-    draw_progress_bar(draw, 565, 380, 580, 10, progress, bg_color="white", fill_color="red")
+        # Progress Bar
+        progress = current_position / total_duration if total_duration > 0 else 0
+        draw_progress_bar(draw, 565, 380, 580, 10, progress, bg_color="white", fill_color="red")
 
-    # Current Time and Duration
-    current_time_text = f"{int(current_position // 60):02}:{int(current_position % 60):02}"
-    draw.text((565, 400), current_time_text, fill=(255, 255, 255), font=font_text)
-    draw.text((1145, 400), duration, fill=(255, 255, 255), font=font_text)
+        # Current Time and Duration
+        current_time_text = f"{int(current_position // 60):02}:{int(current_position % 60):02}"
+        draw.text((565, 400), current_time_text, fill=(255, 255, 255), font=font_text)
+        draw.text((1145, 400), duration, fill=(255, 255, 255), font=font_text)
 
-    # Save and return
-    os.makedirs("cache", exist_ok=True)
-    thumb_path = f"cache/{vidid}_v4_{int(current_position)}.png"
-    background.save(thumb_path)
-    return thumb_path
+        # Save and return
+        os.makedirs("cache", exist_ok=True)
+        thumb_path = f"cache/{vidid}_v4_{int(current_position)}.png"
+        background.save(thumb_path)
+        return thumb_path
+    except Exception as e:
+        print(f"Error generating thumbnail: {e}")
+        return None
 
 # Regenerate Thumbnails in Real-Time
 async def regenerate_thumbnails(vidid, total_duration):
@@ -113,65 +116,73 @@ async def regenerate_thumbnails(vidid, total_duration):
     while current_position <= total_duration:
         print(f"Generating thumbnail for position: {current_position}")
         thumbnail_path = await gen_thumb(vidid, current_position, total_duration)
-        print(f"Thumbnail saved at {thumbnail_path}")
+        if thumbnail_path:
+            print(f"Thumbnail saved at {thumbnail_path}")
         await asyncio.sleep(10)  # Wait for 10 seconds before generating the next frame
         current_position += 10  # Increment current position by 10 seconds
         
+
+
 async def gen_qthumb(vidid, current_position, total_duration):
-    # Fetch video metadata
-    url = f"https://www.youtube.com/watch?v={vidid}"
-    results = VideosSearch(url, limit=1)
-    for result in (await results.next())["result"]:
+    try:
+        # Fetch video metadata
+        url = f"https://www.youtube.com/watch?v={vidid}"
+        results = VideosSearch(url, limit=1)
+        result = (await results.next())["result"][0]
+
         title = re.sub("\W+", " ", result.get("title", "Unsupported Title")).title()
         duration = result.get("duration", "Unknown Mins")
         thumbnail = result["thumbnails"][0]["url"].split("?")[0]
         views = result.get("viewCount", {}).get("short", "Unknown Views")
         channel = result.get("channel", {}).get("name", "Unknown Channel")
 
-    # Download thumbnail
-    async with aiohttp.ClientSession() as session:
-        async with session.get(thumbnail) as resp:
-            if resp.status == 200:
-                f = await aiofiles.open(f"cache/thumb{vidid}.png", mode="wb")
-                await f.write(await resp.read())
-                await f.close()
+        # Download thumbnail
+        async with aiohttp.ClientSession() as session:
+            async with session.get(thumbnail) as resp:
+                if resp.status == 200:
+                    f = await aiofiles.open(f"cache/thumb{vidid}.png", mode="wb")
+                    await f.write(await resp.read())
+                    await f.close()
 
-    # Open and process thumbnail
-    youtube = Image.open(f"cache/thumb{vidid}.png")
-    image1 = changeImageSize(1280, 720, youtube)
-    background = image1.convert("RGBA").filter(ImageFilter.BoxBlur(20))
-    enhancer = ImageEnhance.Brightness(background)
-    background = enhancer.enhance(0.6)
-    draw = ImageDraw.Draw(background)
+        # Open and process thumbnail
+        youtube = Image.open(f"cache/thumb{vidid}.png")
+        image1 = changeImageSize(1280, 720, youtube)
+        background = image1.convert("RGBA").filter(ImageFilter.BoxBlur(20))
+        enhancer = ImageEnhance.Brightness(background)
+        background = enhancer.enhance(0.6)
+        draw = ImageDraw.Draw(background)
 
-    # Fonts
-    font_title = ImageFont.truetype("assets/Bad/font3.ttf", 45)
-    font_text = ImageFont.truetype("assets/Bad/font2.ttf", 30)
+        # Fonts
+        font_title = ImageFont.truetype("assets/Bad/font3.ttf", 45)
+        font_text = ImageFont.truetype("assets/Bad/font2.ttf", 30)
 
-    # Circular thumbnail
-    circle_thumbnail = crop_center_circle(youtube, 400, 20)
-    background.paste(circle_thumbnail, (120, 160), circle_thumbnail)
+        # Circular thumbnail
+        circle_thumbnail = crop_center_circle(youtube, 400, 20)
+        background.paste(circle_thumbnail, (120, 160), circle_thumbnail)
 
-    # Title and Info
-    title_lines = truncate(title)
-    draw.text((565, 180), title_lines[0], fill=(255, 255, 255), font=font_title)
-    draw.text((565, 230), title_lines[1], fill=(255, 255, 255), font=font_title)
-    draw.text((565, 320), f"{channel}  |  {views[:23]}", fill=(255, 255, 255), font=font_text)
+        # Title and Info
+        title_lines = truncate(title)
+        draw.text((565, 180), title_lines[0], fill=(255, 255, 255), font=font_title)
+        draw.text((565, 230), title_lines[1], fill=(255, 255, 255), font=font_title)
+        draw.text((565, 320), f"{channel}  |  {views[:23]}", fill=(255, 255, 255), font=font_text)
 
-    # Progress Bar
-    progress = current_position / total_duration if total_duration > 0 else 0
-    draw_progress_bar(draw, 565, 380, 580, 10, progress, bg_color="white", fill_color="red")
+        # Progress Bar
+        progress = current_position / total_duration if total_duration > 0 else 0
+        draw_progress_bar(draw, 565, 380, 580, 10, progress, bg_color="white", fill_color="red")
 
-    # Current Time and Duration
-    current_time_text = f"{int(current_position // 60):02}:{int(current_position % 60):02}"
-    draw.text((565, 400), current_time_text, fill=(255, 255, 255), font=font_text)
-    draw.text((1145, 400), duration, fill=(255, 255, 255), font=font_text)
+        # Current Time and Duration
+        current_time_text = f"{int(current_position // 60):02}:{int(current_position % 60):02}"
+        draw.text((565, 400), current_time_text, fill=(255, 255, 255), font=font_text)
+        draw.text((1145, 400), duration, fill=(255, 255, 255), font=font_text)
 
-    # Save and return
-    os.makedirs("cache", exist_ok=True)
-    thumb_path = f"cache/{vidid}_v4_{int(current_position)}.png"
-    background.save(thumb_path)
-    return thumb_path
+        # Save and return
+        os.makedirs("cache", exist_ok=True)
+        thumb_path = f"cache/{vidid}_v4_{int(current_position)}.png"
+        background.save(thumb_path)
+        return thumb_path
+    except Exception as e:
+        print(f"Error generating thumbnail: {e}")
+        return None
 
 # Regenerate Thumbnails in Real-Time
 async def regenerate_thumbnails(vidid, total_duration):
@@ -179,6 +190,9 @@ async def regenerate_thumbnails(vidid, total_duration):
     while current_position <= total_duration:
         print(f"Generating thumbnail for position: {current_position}")
         thumbnail_path = await gen_thumb(vidid, current_position, total_duration)
-        print(f"Thumbnail saved at {thumbnail_path}")
+        if thumbnail_path:
+            print(f"Thumbnail saved at {thumbnail_path}")
         await asyncio.sleep(10)  # Wait for 10 seconds before generating the next frame
         current_position += 10  # Increment current position by 10 seconds
+        
+        
