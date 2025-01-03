@@ -96,9 +96,8 @@ async def gen_thumb(vidid, current_position, total_duration):
     draw_progress_bar(draw, 565, 380, 580, 10, progress, bg_color="white", fill_color="red")
 
     # Current Time and Duration
-    current_time_text = f"{int(current_position // 60):02}:{int(current_position % 60):02}"
+    current_time_text = f"{int(current_position // 60):02}:{int(current_position % 60):02} / {int(total_duration // 60):02}:{int(total_duration % 60):02}"
     draw.text((565, 400), current_time_text, fill=(255, 255, 255), font=font_text)
-    draw.text((1145, 400), duration, fill=(255, 255, 255), font=font_text)
 
     # Clean up
     try:
@@ -158,9 +157,8 @@ async def gen_qthumb(vidid, current_position, total_duration):
     draw_progress_bar(draw, 565, 380, 580, 10, progress, bg_color="white", fill_color="red")
 
     # Current Time and Duration
-    current_time_text = f"{int(current_position // 60):02}:{int(current_position % 60):02}"
+    current_time_text = f"{int(current_position // 60):02}:{int(current_position % 60):02} / {int(total_duration // 60):02}:{int(total_duration % 60):02}"
     draw.text((565, 400), current_time_text, fill=(255, 255, 255), font=font_text)
-    draw.text((1145, 400), duration, fill=(255, 255, 255), font=font_text)
 
     # Clean up
     try:
