@@ -17,8 +17,7 @@ def changeImageSize(maxWidth, maxHeight, image):
 
 def truncate(text):
     words = text.split(" ")
-    text1 = ""
-    text2 = ""
+    text1, text2 = "", ""
     for word in words:
         if len(text1) + len(word) < 30:
             text1 += " " + word
@@ -48,7 +47,7 @@ def draw_progress_bar(draw, x, y, width, height, progress, bg_color="white", fil
     draw.rectangle([x, y, x + width, y + height], fill=bg_color)  # Background
     draw.rectangle([x, y, x + int(width * progress), y + height], fill=fill_color)  # Progress
 
-# Main Thumbnail Generator
+# Thumbnail Generator
 async def gen_thumb(vidid, current_position, total_duration):
     try:
         # Fetch video metadata
@@ -63,15 +62,16 @@ async def gen_thumb(vidid, current_position, total_duration):
         channel = result.get("channel", {}).get("name", "Unknown Channel")
 
         # Download thumbnail
+        os.makedirs("cache", exist_ok=True)
         async with aiohttp.ClientSession() as session:
             async with session.get(thumbnail) as resp:
                 if resp.status == 200:
-                    f = await aiofiles.open(f"cache/thumb{vidid}.png", mode="wb")
-                    await f.write(await resp.read())
-                    await f.close()
+                    thumbnail_path = f"cache/thumb{vidid}.png"
+                    async with aiofiles.open(thumbnail_path, mode="wb") as f:
+                        await f.write(await resp.read())
 
         # Open and process thumbnail
-        youtube = Image.open(f"cache/thumb{vidid}.png")
+        youtube = Image.open(thumbnail_path)
         image1 = changeImageSize(1280, 720, youtube)
         background = image1.convert("RGBA").filter(ImageFilter.BoxBlur(20))
         enhancer = ImageEnhance.Brightness(background)
@@ -102,7 +102,6 @@ async def gen_thumb(vidid, current_position, total_duration):
         draw.text((1145, 400), duration, fill=(255, 255, 255), font=font_text)
 
         # Save and return
-        os.makedirs("cache", exist_ok=True)
         thumb_path = f"cache/{vidid}_v4_{int(current_position)}.png"
         background.save(thumb_path)
         return thumb_path
@@ -110,7 +109,7 @@ async def gen_thumb(vidid, current_position, total_duration):
         print(f"Error generating thumbnail: {e}")
         return None
 
-# Regenerate Thumbnails in Real-Time
+# Real-Time Thumbnail Regeneration
 async def regenerate_thumbnails(vidid, total_duration):
     current_position = 0
     while current_position <= total_duration:
@@ -118,11 +117,10 @@ async def regenerate_thumbnails(vidid, total_duration):
         thumbnail_path = await gen_thumb(vidid, current_position, total_duration)
         if thumbnail_path:
             print(f"Thumbnail saved at {thumbnail_path}")
-        await asyncio.sleep(10)  # Wait for 10 seconds before generating the next frame
-        current_position += 10  # Increment current position by 10 seconds
+        await asyncio.sleep(10)  # Update every 10 seconds
+        current_position += 10
         
-
-
+        
 async def gen_qthumb(vidid, current_position, total_duration):
     try:
         # Fetch video metadata
@@ -137,15 +135,16 @@ async def gen_qthumb(vidid, current_position, total_duration):
         channel = result.get("channel", {}).get("name", "Unknown Channel")
 
         # Download thumbnail
+        os.makedirs("cache", exist_ok=True)
         async with aiohttp.ClientSession() as session:
             async with session.get(thumbnail) as resp:
                 if resp.status == 200:
-                    f = await aiofiles.open(f"cache/thumb{vidid}.png", mode="wb")
-                    await f.write(await resp.read())
-                    await f.close()
+                    thumbnail_path = f"cache/thumb{vidid}.png"
+                    async with aiofiles.open(thumbnail_path, mode="wb") as f:
+                        await f.write(await resp.read())
 
         # Open and process thumbnail
-        youtube = Image.open(f"cache/thumb{vidid}.png")
+        youtube = Image.open(thumbnail_path)
         image1 = changeImageSize(1280, 720, youtube)
         background = image1.convert("RGBA").filter(ImageFilter.BoxBlur(20))
         enhancer = ImageEnhance.Brightness(background)
@@ -176,7 +175,6 @@ async def gen_qthumb(vidid, current_position, total_duration):
         draw.text((1145, 400), duration, fill=(255, 255, 255), font=font_text)
 
         # Save and return
-        os.makedirs("cache", exist_ok=True)
         thumb_path = f"cache/{vidid}_v4_{int(current_position)}.png"
         background.save(thumb_path)
         return thumb_path
@@ -184,7 +182,7 @@ async def gen_qthumb(vidid, current_position, total_duration):
         print(f"Error generating thumbnail: {e}")
         return None
 
-# Regenerate Thumbnails in Real-Time
+# Real-Time Thumbnail Regeneration
 async def regenerate_thumbnails(vidid, total_duration):
     current_position = 0
     while current_position <= total_duration:
@@ -192,7 +190,5 @@ async def regenerate_thumbnails(vidid, total_duration):
         thumbnail_path = await gen_thumb(vidid, current_position, total_duration)
         if thumbnail_path:
             print(f"Thumbnail saved at {thumbnail_path}")
-        await asyncio.sleep(10)  # Wait for 10 seconds before generating the next frame
-        current_position += 10  # Increment current position by 10 seconds
-        
-        
+        await asyncio.sleep(10)  # Update every 10 seconds
+        current_position += 10
