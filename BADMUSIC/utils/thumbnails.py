@@ -106,8 +106,9 @@ async def gen_thumb(vidid, current_position, total_duration):
 
         # Current Time and Duration
         current_time_text = f"{int(current_position // 60):02}:{int(current_position % 60):02}"
+        total_time_text = f"{int(total_duration // 60):02}:{int(total_duration % 60):02}"
         draw.text((565, 400), current_time_text, fill=(255, 255, 255), font=font_text)
-        draw.text((1145, 400), f"{int(total_duration // 60):02}:{int(total_duration % 60):02}", fill=(255, 255, 255), font=font_text)
+        draw.text((1145, 400), total_time_text, fill=(255, 255, 255), font=font_text)
 
         # Save and return
         thumb_path = f"cache/{vidid}_v4_{int(current_position)}.png"
@@ -133,7 +134,7 @@ async def regenerate_thumbnails(vidid, total_duration):
 # Test the function
 # asyncio.run(regenerate_thumbnails("your_video_id", total_duration_in_seconds))
 
-
+# Thumbnail Generator
 async def gen_qthumb(vidid, current_position, total_duration):
     try:
         # Fetch video metadata
@@ -184,8 +185,9 @@ async def gen_qthumb(vidid, current_position, total_duration):
 
         # Current Time and Duration
         current_time_text = f"{int(current_position // 60):02}:{int(current_position % 60):02}"
+        total_time_text = f"{int(total_duration // 60):02}:{int(total_duration % 60):02}"
         draw.text((565, 400), current_time_text, fill=(255, 255, 255), font=font_text)
-        draw.text((1145, 400), f"{int(total_duration // 60):02}:{int(total_duration % 60):02}", fill=(255, 255, 255), font=font_text)
+        draw.text((1145, 400), total_time_text, fill=(255, 255, 255), font=font_text)
 
         # Save and return
         thumb_path = f"cache/{vidid}_v4_{int(current_position)}.png"
@@ -210,4 +212,3 @@ async def regenerate_thumbnails(vidid, total_duration):
 
 # Test the function
 # asyncio.run(regenerate_thumbnails("your_video_id", total_duration_in_seconds))
-
