@@ -89,7 +89,10 @@ async def gen_thumb(vidid, current_position, total_duration):
     draw.text((565, 320), f"{channel}  |  {views[:23]}", fill=(255, 255, 255), font=font_text)
 
     # Progress Bar
-    progress = current_position / total_duration  # Fractional progress
+    if total_duration > 0:
+        progress = current_position / total_duration  # Fractional progress
+    else:
+        progress = 0  # Set to 0 if total_duration is zero to avoid division by zero
     draw_progress_bar(draw, 565, 380, 580, 10, progress, bg_color="white", fill_color="red")
 
     # Current Time and Duration
@@ -148,7 +151,10 @@ async def gen_qthumb(vidid, current_position, total_duration):
     draw.text((565, 320), f"{channel}  |  {views[:23]}", fill=(255, 255, 255), font=font_text)
 
     # Progress Bar
-    progress = current_position / total_duration  # Fractional progress
+    if total_duration > 0:
+        progress = current_position / total_duration  # Fractional progress
+    else:
+        progress = 0  # Set to 0 if total_duration is zero to avoid division by zero
     draw_progress_bar(draw, 565, 380, 580, 10, progress, bg_color="white", fill_color="red")
 
     # Current Time and Duration
