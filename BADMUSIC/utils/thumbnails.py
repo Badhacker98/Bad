@@ -1,3 +1,4 @@
+import asyncio
 import os
 import re
 import aiofiles
@@ -7,6 +8,7 @@ from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 from unidecode import unidecode
 from youtubesearchpython.__future__ import VideosSearch
 
+# Helper Functions
 def changeImageSize(maxWidth, maxHeight, image):
     widthRatio = maxWidth / image.size[0]
     heightRatio = maxHeight / image.size[1]
@@ -48,10 +50,9 @@ def draw_progress_bar(draw, x, y, width, height, progress, bg_color="white", fil
     draw.rectangle([x, y, x + width, y + height], fill=bg_color)  # Background
     draw.rectangle([x, y, x + int(width * progress), y + height], fill=fill_color)  # Progress
 
+# Main Thumbnail Generator
 async def gen_thumb(vidid, current_position, total_duration):
-    if os.path.isfile(f"cache/{vidid}_v4.png"):
-        return f"cache/{vidid}_v4.png"
-
+    # Fetch video metadata
     url = f"https://www.youtube.com/watch?v={vidid}"
     results = VideosSearch(url, limit=1)
     for result in (await results.next())["result"]:
@@ -61,6 +62,7 @@ async def gen_thumb(vidid, current_position, total_duration):
         views = result.get("viewCount", {}).get("short", "Unknown Views")
         channel = result.get("channel", {}).get("name", "Unknown Channel")
 
+    # Download thumbnail
     async with aiohttp.ClientSession() as session:
         async with session.get(thumbnail) as resp:
             if resp.status == 200:
@@ -68,6 +70,7 @@ async def gen_thumb(vidid, current_position, total_duration):
                 await f.write(await resp.read())
                 await f.close()
 
+    # Open and process thumbnail
     youtube = Image.open(f"cache/thumb{vidid}.png")
     image1 = changeImageSize(1280, 720, youtube)
     background = image1.convert("RGBA").filter(ImageFilter.BoxBlur(20))
@@ -75,6 +78,7 @@ async def gen_thumb(vidid, current_position, total_duration):
     background = enhancer.enhance(0.6)
     draw = ImageDraw.Draw(background)
 
+    # Fonts
     font_title = ImageFont.truetype("assets/Bad/font3.ttf", 45)
     font_text = ImageFont.truetype("assets/Bad/font2.ttf", 30)
 
@@ -89,30 +93,31 @@ async def gen_thumb(vidid, current_position, total_duration):
     draw.text((565, 320), f"{channel}  |  {views[:23]}", fill=(255, 255, 255), font=font_text)
 
     # Progress Bar
-    if total_duration > 0:
-        progress = current_position / total_duration  # Fractional progress
-    else:
-        progress = 0  # Set to 0 if total_duration is zero to avoid division by zero
+    progress = current_position / total_duration if total_duration > 0 else 0
     draw_progress_bar(draw, 565, 380, 580, 10, progress, bg_color="white", fill_color="red")
 
     # Current Time and Duration
-    current_time_text = f"{int(current_position // 60):02}:{int(current_position % 60):02} / {int(total_duration // 60):02}:{int(total_duration % 60):02}"
+    current_time_text = f"{int(current_position // 60):02}:{int(current_position % 60):02}"
     draw.text((565, 400), current_time_text, fill=(255, 255, 255), font=font_text)
+    draw.text((1145, 400), duration, fill=(255, 255, 255), font=font_text)
 
-    # Clean up
-    try:
-        os.remove(f"cache/thumb{vidid}.png")
-    except:
-        pass
+    # Save and return
+    os.makedirs("cache", exist_ok=True)
+    thumb_path = f"cache/{vidid}_v4.png"
+    background.save(thumb_path)
+    return thumb_path
 
-    background.save(f"cache/{vidid}_v4.png")
-    return f"cache/{vidid}_v4.png"
-
+# Loop to Regenerate Thumbnail
+async def regenerate_thumbnails(vidid, total_duration):
+    current_position = 0
+    while current_position <= total_duration:
+        await gen_thumb(vidid, current_position, total_duration)
+        current_position += 10  # Increment by 10 seconds
+        await asyncio.sleep(10)  # Wait for 10 seconds
+        
 
 async def gen_qthumb(vidid, current_position, total_duration):
-    if os.path.isfile(f"cache/{vidid}_v4.png"):
-        return f"cache/{vidid}_v4.png"
-
+    # Fetch video metadata
     url = f"https://www.youtube.com/watch?v={vidid}"
     results = VideosSearch(url, limit=1)
     for result in (await results.next())["result"]:
@@ -122,6 +127,7 @@ async def gen_qthumb(vidid, current_position, total_duration):
         views = result.get("viewCount", {}).get("short", "Unknown Views")
         channel = result.get("channel", {}).get("name", "Unknown Channel")
 
+    # Download thumbnail
     async with aiohttp.ClientSession() as session:
         async with session.get(thumbnail) as resp:
             if resp.status == 200:
@@ -129,6 +135,7 @@ async def gen_qthumb(vidid, current_position, total_duration):
                 await f.write(await resp.read())
                 await f.close()
 
+    # Open and process thumbnail
     youtube = Image.open(f"cache/thumb{vidid}.png")
     image1 = changeImageSize(1280, 720, youtube)
     background = image1.convert("RGBA").filter(ImageFilter.BoxBlur(20))
@@ -136,6 +143,7 @@ async def gen_qthumb(vidid, current_position, total_duration):
     background = enhancer.enhance(0.6)
     draw = ImageDraw.Draw(background)
 
+    # Fonts
     font_title = ImageFont.truetype("assets/Bad/font3.ttf", 45)
     font_text = ImageFont.truetype("assets/Bad/font2.ttf", 30)
 
@@ -150,21 +158,26 @@ async def gen_qthumb(vidid, current_position, total_duration):
     draw.text((565, 320), f"{channel}  |  {views[:23]}", fill=(255, 255, 255), font=font_text)
 
     # Progress Bar
-    if total_duration > 0:
-        progress = current_position / total_duration  # Fractional progress
-    else:
-        progress = 0  # Set to 0 if total_duration is zero to avoid division by zero
+    progress = current_position / total_duration if total_duration > 0 else 0
     draw_progress_bar(draw, 565, 380, 580, 10, progress, bg_color="white", fill_color="red")
 
     # Current Time and Duration
-    current_time_text = f"{int(current_position // 60):02}:{int(current_position % 60):02} / {int(total_duration // 60):02}:{int(total_duration % 60):02}"
+    current_time_text = f"{int(current_position // 60):02}:{int(current_position % 60):02}"
     draw.text((565, 400), current_time_text, fill=(255, 255, 255), font=font_text)
+    draw.text((1145, 400), duration, fill=(255, 255, 255), font=font_text)
 
-    # Clean up
-    try:
-        os.remove(f"cache/thumb{vidid}.png")
-    except:
-        pass
+    # Save and return
+    os.makedirs("cache", exist_ok=True)
+    thumb_path = f"cache/{vidid}_v4.png"
+    background.save(thumb_path)
+    return thumb_path
 
-    background.save(f"cache/{vidid}_v4.png")
-    return f"cache/{vidid}_v4.png"
+# Loop to Regenerate Thumbnail
+async def regenerate_thumbnails(vidid, total_duration):
+    current_position = 0
+    while current_position <= total_duration:
+        await gen_thumb(vidid, current_position, total_duration)
+        current_position += 10  # Increment by 10 seconds
+        await asyncio.sleep(10)  # Wait for 10 seconds
+        
+        
