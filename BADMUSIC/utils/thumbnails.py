@@ -75,8 +75,8 @@ async def gen_thumb(vidid, current_position, total_duration):
     background = enhancer.enhance(0.6)
     draw = ImageDraw.Draw(background)
 
-    font_title = ImageFont.truetype("assets/Badfont3.ttf", 45)
-    font_text = ImageFont.truetype("assets/Badfont2.ttf", 30)
+    font_title = ImageFont.truetype("assets/Bad/font3.ttf", 45)
+    font_text = ImageFont.truetype("assets/Bad/font2.ttf", 30)
 
     # Circular thumbnail
     circle_thumbnail = crop_center_circle(youtube, 400, 20)
@@ -134,8 +134,8 @@ async def gen_qthumb(vidid, current_position, total_duration):
     background = enhancer.enhance(0.6)
     draw = ImageDraw.Draw(background)
 
-    font_title = ImageFont.truetype("assets/Badfont3.ttf", 45)
-    font_text = ImageFont.truetype("assets/Badfont2.ttf", 30)
+    font_title = ImageFont.truetype("assets/Bad/font3.ttf", 45)
+    font_text = ImageFont.truetype("assets/Bad/font2.ttf", 30)
 
     # Circular thumbnail
     circle_thumbnail = crop_center_circle(youtube, 400, 20)
