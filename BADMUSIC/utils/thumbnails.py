@@ -47,6 +47,14 @@ def draw_progress_bar(draw, x, y, width, height, progress, bg_color="white", fil
     draw.rectangle([x, y, x + width, y + height], fill=bg_color)  # Background
     draw.rectangle([x, y, x + int(width * progress), y + height], fill=fill_color)  # Progress
 
+async def parse_duration(duration_str):
+    parts = duration_str.split(":")
+    if len(parts) == 3:  # HH:MM:SS
+        return int(parts[0]) * 3600 + int(parts[1]) * 60 + int(parts[2])
+    elif len(parts) == 2:  # MM:SS
+        return int(parts[0]) * 60 + int(parts[1])
+    return 0
+
 # Thumbnail Generator
 async def gen_thumb(vidid, current_position, total_duration):
     try:
@@ -56,7 +64,7 @@ async def gen_thumb(vidid, current_position, total_duration):
         result = (await results.next())["result"][0]
 
         title = re.sub("\W+", " ", result.get("title", "Unsupported Title")).title()
-        duration = result.get("duration", "Unknown Mins")
+        duration = await parse_duration(result.get("duration", "0:00"))
         thumbnail = result["thumbnails"][0]["url"].split("?")[0]
         views = result.get("viewCount", {}).get("short", "Unknown Views")
         channel = result.get("channel", {}).get("name", "Unknown Channel")
@@ -99,7 +107,7 @@ async def gen_thumb(vidid, current_position, total_duration):
         # Current Time and Duration
         current_time_text = f"{int(current_position // 60):02}:{int(current_position % 60):02}"
         draw.text((565, 400), current_time_text, fill=(255, 255, 255), font=font_text)
-        draw.text((1145, 400), duration, fill=(255, 255, 255), font=font_text)
+        draw.text((1145, 400), f"{int(total_duration // 60):02}:{int(total_duration % 60):02}", fill=(255, 255, 255), font=font_text)
 
         # Save and return
         thumb_path = f"cache/{vidid}_v4_{int(current_position)}.png"
@@ -126,7 +134,6 @@ async def regenerate_thumbnails(vidid, total_duration):
 # asyncio.run(regenerate_thumbnails("your_video_id", total_duration_in_seconds))
 
 
-# Thumbnail Generator
 async def gen_qthumb(vidid, current_position, total_duration):
     try:
         # Fetch video metadata
@@ -135,7 +142,7 @@ async def gen_qthumb(vidid, current_position, total_duration):
         result = (await results.next())["result"][0]
 
         title = re.sub("\W+", " ", result.get("title", "Unsupported Title")).title()
-        duration = result.get("duration", "Unknown Mins")
+        duration = await parse_duration(result.get("duration", "0:00"))
         thumbnail = result["thumbnails"][0]["url"].split("?")[0]
         views = result.get("viewCount", {}).get("short", "Unknown Views")
         channel = result.get("channel", {}).get("name", "Unknown Channel")
@@ -178,7 +185,7 @@ async def gen_qthumb(vidid, current_position, total_duration):
         # Current Time and Duration
         current_time_text = f"{int(current_position // 60):02}:{int(current_position % 60):02}"
         draw.text((565, 400), current_time_text, fill=(255, 255, 255), font=font_text)
-        draw.text((1145, 400), duration, fill=(255, 255, 255), font=font_text)
+        draw.text((1145, 400), f"{int(total_duration // 60):02}:{int(total_duration % 60):02}", fill=(255, 255, 255), font=font_text)
 
         # Save and return
         thumb_path = f"cache/{vidid}_v4_{int(current_position)}.png"
@@ -203,3 +210,4 @@ async def regenerate_thumbnails(vidid, total_duration):
 
 # Test the function
 # asyncio.run(regenerate_thumbnails("your_video_id", total_duration_in_seconds))
+
