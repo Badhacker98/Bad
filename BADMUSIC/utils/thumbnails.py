@@ -111,11 +111,11 @@ async def gen_thumb(vidid, current_position, total_duration):
 async def regenerate_thumbnails(vidid, total_duration):
     current_position = 0
     while current_position <= total_duration:
+        print(f"Generating thumbnail for position: {current_position}")
         await gen_thumb(vidid, current_position, total_duration)
         current_position += 10  # Increment by 10 seconds
         await asyncio.sleep(10)  # Wait for 10 seconds
         
-
 async def gen_qthumb(vidid, current_position, total_duration):
     # Fetch video metadata
     url = f"https://www.youtube.com/watch?v={vidid}"
@@ -176,6 +176,7 @@ async def gen_qthumb(vidid, current_position, total_duration):
 async def regenerate_thumbnails(vidid, total_duration):
     current_position = 0
     while current_position <= total_duration:
+        print(f"Generating thumbnail for position: {current_position}")
         await gen_thumb(vidid, current_position, total_duration)
         current_position += 10  # Increment by 10 seconds
         await asyncio.sleep(10)  # Wait for 10 seconds
