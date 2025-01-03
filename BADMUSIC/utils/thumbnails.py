@@ -117,10 +117,14 @@ async def regenerate_thumbnails(vidid, total_duration):
         thumbnail_path = await gen_thumb(vidid, current_position, total_duration)
         if thumbnail_path:
             print(f"Thumbnail saved at {thumbnail_path}")
+        else:
+            print("Failed to generate thumbnail.")
         await asyncio.sleep(10)  # Update every 10 seconds
         current_position += 10
-        
-        
+
+# Test the function
+# asyncio.run(regenerate_thumbnails("your_video_id", total_duration_in_seconds))
+
 async def gen_qthumb(vidid, current_position, total_duration):
     try:
         # Fetch video metadata
@@ -190,5 +194,10 @@ async def regenerate_thumbnails(vidid, total_duration):
         thumbnail_path = await gen_thumb(vidid, current_position, total_duration)
         if thumbnail_path:
             print(f"Thumbnail saved at {thumbnail_path}")
+        else:
+            print("Failed to generate thumbnail.")
         await asyncio.sleep(10)  # Update every 10 seconds
         current_position += 10
+
+# Test the function
+# asyncio.run(regenerate_thumbnails("your_video_id", total_duration_in_seconds))
