@@ -48,7 +48,7 @@ def draw_progress_bar(draw, x, y, width, height, progress, bg_color="white", fil
     draw.rectangle([x, y, x + int(width * progress), y + height], fill=fill_color)  # Progress
 
 # Thumbnail Generator
-async def gen_thumb(vidid, current_position, total_duration):
+async def gen_thumb(vidid, current_position, total_duration, user_dp_url, username):
     try:
         # Fetch video metadata
         url = f"https://www.youtube.com/watch?v={vidid}"
@@ -61,7 +61,7 @@ async def gen_thumb(vidid, current_position, total_duration):
         views = result.get("viewCount", {}).get("short", "Unknown Views")
         channel = result.get("channel", {}).get("name", "Unknown Channel")
 
-        # Download thumbnail
+        # Download thumbnail and user DP
         os.makedirs("cache", exist_ok=True)
         async with aiohttp.ClientSession() as session:
             async with session.get(thumbnail) as resp:
@@ -70,8 +70,15 @@ async def gen_thumb(vidid, current_position, total_duration):
                     async with aiofiles.open(thumbnail_path, mode="wb") as f:
                         await f.write(await resp.read())
 
+            async with session.get(user_dp_url) as resp:
+                if resp.status == 200:
+                    user_dp_path = f"cache/user_dp.png"
+                    async with aiofiles.open(user_dp_path, mode="wb") as f:
+                        await f.write(await resp.read())
+
         # Open and process thumbnail
         youtube = Image.open(thumbnail_path)
+        user_dp = Image.open(user_dp_path).resize((100, 100)).convert("RGBA")
         image1 = changeImageSize(1280, 720, youtube)
         background = image1.convert("RGBA").filter(ImageFilter.BoxBlur(20))
         enhancer = ImageEnhance.Brightness(background)
@@ -85,6 +92,11 @@ async def gen_thumb(vidid, current_position, total_duration):
         # Circular thumbnail
         circle_thumbnail = crop_center_circle(youtube, 400, 20)
         background.paste(circle_thumbnail, (120, 160), circle_thumbnail)
+
+        # User DP and Username
+        dp_position = (180, 580)
+        background.paste(user_dp, dp_position, user_dp)
+        draw.text((300, 600), username, fill=(255, 255, 255), font=font_text)
 
         # Title and Info
         title_lines = truncate(title)
@@ -110,11 +122,11 @@ async def gen_thumb(vidid, current_position, total_duration):
         return None
 
 # Real-Time Thumbnail Regeneration
-async def regenerate_thumbnails(vidid, total_duration):
+async def regenerate_thumbnails(vidid, total_duration, user_dp_url, username):
     current_position = 0
     while current_position <= total_duration:
         print(f"Generating thumbnail for position: {current_position}")
-        thumbnail_path = await gen_thumb(vidid, current_position, total_duration)
+        thumbnail_path = await gen_thumb(vidid, current_position, total_duration, user_dp_url, username)
         if thumbnail_path:
             print(f"Thumbnail saved at {thumbnail_path}")
         else:
@@ -123,9 +135,10 @@ async def regenerate_thumbnails(vidid, total_duration):
         current_position += 10
 
 # Test the function
-# asyncio.run(regenerate_thumbnails("your_video_id", total_duration_in_seconds))
+# Replace "your_video_id", "user_dp_url", and "username" with actual values
+# asyncio.run(regenerate_thumbnails("your_video_id", total_duration_in_seconds, "user_dp_url", "username"))
 
-async def gen_qthumb(vidid, current_position, total_duration):
+async def gen_qthumb(vidid, current_position, total_duration, user_dp_url, username):
     try:
         # Fetch video metadata
         url = f"https://www.youtube.com/watch?v={vidid}"
@@ -138,7 +151,7 @@ async def gen_qthumb(vidid, current_position, total_duration):
         views = result.get("viewCount", {}).get("short", "Unknown Views")
         channel = result.get("channel", {}).get("name", "Unknown Channel")
 
-        # Download thumbnail
+        # Download thumbnail and user DP
         os.makedirs("cache", exist_ok=True)
         async with aiohttp.ClientSession() as session:
             async with session.get(thumbnail) as resp:
@@ -147,8 +160,15 @@ async def gen_qthumb(vidid, current_position, total_duration):
                     async with aiofiles.open(thumbnail_path, mode="wb") as f:
                         await f.write(await resp.read())
 
+            async with session.get(user_dp_url) as resp:
+                if resp.status == 200:
+                    user_dp_path = f"cache/user_dp.png"
+                    async with aiofiles.open(user_dp_path, mode="wb") as f:
+                        await f.write(await resp.read())
+
         # Open and process thumbnail
         youtube = Image.open(thumbnail_path)
+        user_dp = Image.open(user_dp_path).resize((100, 100)).convert("RGBA")
         image1 = changeImageSize(1280, 720, youtube)
         background = image1.convert("RGBA").filter(ImageFilter.BoxBlur(20))
         enhancer = ImageEnhance.Brightness(background)
@@ -162,6 +182,11 @@ async def gen_qthumb(vidid, current_position, total_duration):
         # Circular thumbnail
         circle_thumbnail = crop_center_circle(youtube, 400, 20)
         background.paste(circle_thumbnail, (120, 160), circle_thumbnail)
+
+        # User DP and Username
+        dp_position = (180, 580)
+        background.paste(user_dp, dp_position, user_dp)
+        draw.text((300, 600), username, fill=(255, 255, 255), font=font_text)
 
         # Title and Info
         title_lines = truncate(title)
@@ -187,11 +212,11 @@ async def gen_qthumb(vidid, current_position, total_duration):
         return None
 
 # Real-Time Thumbnail Regeneration
-async def regenerate_thumbnails(vidid, total_duration):
+async def regenerate_thumbnails(vidid, total_duration, user_dp_url, username):
     current_position = 0
     while current_position <= total_duration:
         print(f"Generating thumbnail for position: {current_position}")
-        thumbnail_path = await gen_thumb(vidid, current_position, total_duration)
+        thumbnail_path = await gen_thumb(vidid, current_position, total_duration, user_dp_url, username)
         if thumbnail_path:
             print(f"Thumbnail saved at {thumbnail_path}")
         else:
@@ -200,4 +225,5 @@ async def regenerate_thumbnails(vidid, total_duration):
         current_position += 10
 
 # Test the function
-# asyncio.run(regenerate_thumbnails("your_video_id", total_duration_in_seconds))
+# Replace "your_video_id", "user_dp_url", and "username" with actual values
+# asyncio.run(regenerate_thumbnails("your_video_id", total_duration_in_seconds, "user_dp_url", "username"))
