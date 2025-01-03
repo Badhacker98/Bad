@@ -103,18 +103,19 @@ async def gen_thumb(vidid, current_position, total_duration):
 
     # Save and return
     os.makedirs("cache", exist_ok=True)
-    thumb_path = f"cache/{vidid}_v4.png"
+    thumb_path = f"cache/{vidid}_v4_{int(current_position)}.png"
     background.save(thumb_path)
     return thumb_path
 
-# Loop to Regenerate Thumbnail
+# Regenerate Thumbnails in Real-Time
 async def regenerate_thumbnails(vidid, total_duration):
     current_position = 0
     while current_position <= total_duration:
         print(f"Generating thumbnail for position: {current_position}")
-        await gen_thumb(vidid, current_position, total_duration)
-        current_position += 10  # Increment by 10 seconds
-        await asyncio.sleep(10)  # Wait for 10 seconds
+        thumbnail_path = await gen_thumb(vidid, current_position, total_duration)
+        print(f"Thumbnail saved at {thumbnail_path}")
+        await asyncio.sleep(10)  # Wait for 10 seconds before generating the next frame
+        current_position += 10  # Increment current position by 10 seconds
         
 async def gen_qthumb(vidid, current_position, total_duration):
     # Fetch video metadata
@@ -168,17 +169,16 @@ async def gen_qthumb(vidid, current_position, total_duration):
 
     # Save and return
     os.makedirs("cache", exist_ok=True)
-    thumb_path = f"cache/{vidid}_v4.png"
+    thumb_path = f"cache/{vidid}_v4_{int(current_position)}.png"
     background.save(thumb_path)
     return thumb_path
 
-# Loop to Regenerate Thumbnail
+# Regenerate Thumbnails in Real-Time
 async def regenerate_thumbnails(vidid, total_duration):
     current_position = 0
     while current_position <= total_duration:
         print(f"Generating thumbnail for position: {current_position}")
-        await gen_thumb(vidid, current_position, total_duration)
-        current_position += 10  # Increment by 10 seconds
-        await asyncio.sleep(10)  # Wait for 10 seconds
-        
-        
+        thumbnail_path = await gen_thumb(vidid, current_position, total_duration)
+        print(f"Thumbnail saved at {thumbnail_path}")
+        await asyncio.sleep(10)  # Wait for 10 seconds before generating the next frame
+        current_position += 10  # Increment current position by 10 seconds
