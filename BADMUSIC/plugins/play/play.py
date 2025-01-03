@@ -60,6 +60,21 @@ async def play_commnd(
     spotify = None
     user_id = message.from_user.id
     user_name = message.from_user.mention
+    user_dp_url = await client.get_profile_photos(user_id, limit=1)  # Fetch user's DP
+    user_dp_url = user_dp_url[0].file_id if user_dp_url else None  # Use file_id of the DP
+
+    # Check if the user has started the bot in DM
+    try:
+        await client.send_message(
+            user_id,
+            "Please start the bot in DM to use this command.",
+            reply_markup=InlineKeyboardMarkup([
+                [{"text": "Start Bot", "url": f"https://t.me/{client.username}"}]
+            ])
+        )
+    except:
+        return await mystic.edit_text("Please start the bot in DM to use this command.")
+
     audio_telegram = (
         (message.reply_to_message.audio or message.reply_to_message.voice)
         if message.reply_to_message
@@ -99,6 +114,7 @@ async def play_commnd(
                     chat_id,
                     user_name,
                     message.chat.id,
+                    user_dp_url,
                     streamtype="telegram",
                     forceplay=fplay,
                 )
@@ -148,6 +164,7 @@ async def play_commnd(
                     chat_id,
                     user_name,
                     message.chat.id,
+                    user_dp_url,
                     video=True,
                     streamtype="telegram",
                     forceplay=fplay,
@@ -319,6 +336,7 @@ async def play_commnd(
                     chat_id,
                     user_name,
                     message.chat.id,
+                    user_dp_url,
                     streamtype=streamtype,
                     forceplay=fplay,
                 )
@@ -354,6 +372,7 @@ async def play_commnd(
                     chat_id,
                     user_name,
                     message.chat.id,
+                    user_dp_url,
                     streamtype="soundcloud",
                     forceplay=fplay,
                 )
@@ -380,6 +399,7 @@ async def play_commnd(
                     chat_id,
                     message.from_user.first_name,
                     message.chat.id,
+                    user_dp_url,
                     video=video,
                     streamtype="index",
                     forceplay=fplay,
@@ -441,6 +461,7 @@ async def play_commnd(
                 chat_id,
                 user_name,
                 message.chat.id,
+                user_dp_url,
                 video=video,
                 streamtype=streamtype,
                 spotify=spotify,
@@ -519,15 +540,3 @@ async def play_commnd(
 __MODULE__ = "ᴘʟᴀʏ"
 __HELP__ = """
 <b>★ ᴘʟᴀʏ , ᴠᴘʟᴀʏ , ᴄᴘʟᴀʏ</b> - Aᴠᴀɪʟᴀʙʟᴇ Cᴏᴍᴍᴀɴᴅs
-<b>★ ᴘʟᴀʏғᴏʀᴄᴇ , ᴠᴘʟᴀʏғᴏʀᴄᴇ , ᴄᴘʟᴀʏғᴏʀᴄᴇ</b> - FᴏʀᴄᴇPʟᴀʏ Cᴏᴍᴍᴀɴᴅs
-
-<b>✦ c sᴛᴀɴᴅs ғᴏʀ ᴄʜᴀɴɴᴇʟ ᴘʟᴀʏ.</b>
-<b>✦ v sᴛᴀɴᴅs ғᴏʀ ᴠɪᴅᴇᴏ ᴘʟᴀʏ.</b>
-<b>✦ force sᴛᴀɴᴅs ғᴏʀ ғᴏʀᴄᴇ ᴘʟᴀʏ.</b>
-
-<b>✧ /play ᴏʀ /vplay ᴏʀ /cplay</b> - Bᴏᴛ ᴡɪʟʟ sᴛᴀʀᴛ ᴘʟᴀʏɪɴɢ ʏᴏᴜʀ ɢɪᴠᴇɴ ǫᴜᴇʀʏ ᴏɴ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ᴏʀ Sᴛʀᴇᴀᴍ ʟɪᴠᴇ ʟɪɴᴋs ᴏɴ ᴠᴏɪᴄᴇ ᴄʜᴀᴛs.
-
-<b>✧ /playforce ᴏʀ /vplayforce ᴏʀ /cplayforce</b> - Fᴏʀᴄᴇ Pʟᴀʏ sᴛᴏᴘs ᴛʜᴇ ᴄᴜʀʀᴇɴᴛ ᴘʟᴀʏɪɴɢ ᴛʀᴀᴄᴋ ᴏɴ ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ᴀɴᴅ sᴛᴀʀᴛs ᴘʟᴀʏɪɴɢ ᴛʜᴇ sᴇᴀʀᴄʜᴇᴅ ᴛʀᴀᴄᴋ ɪɴsᴛᴀɴᴛʟʏ ᴡɪᴛʜᴏᴜᴛ ᴅɪsᴛᴜʀʙɪɴɢ/ᴄʟᴇᴀʀɪɴɢ ǫᴜᴇᴜᴇ.
-
-<b>✧ /channelplay [Cʜᴀᴛ ᴜsᴇʀɴᴀᴍᴇ ᴏʀ ɪᴅ] ᴏʀ [Dɪsᴀʙʟᴇ]</b> - Cᴏɴɴᴇᴄᴛ ᴄʜᴀɴɴᴇʟ ᴛᴏ ᴀ ɢʀᴏᴜᴘ ᴀɴᴅ sᴛʀᴇᴀᴍ ᴍᴜsɪᴄ ᴏɴ ᴄʜᴀɴɴᴇʟ's ᴠᴏɪᴄᴇ ᴄʜᴀᴛ ғʀᴏᴍ ʏᴏᴜʀ ɢʀᴏᴜᴘ.
-"""
