@@ -29,6 +29,7 @@ async def stream(
     chat_id,
     user_name,
     original_chat_id,
+    user_dp_url,
     video: Union[bool, str] = None,
     streamtype: Union[bool, str] = None,
     spotify: Union[bool, str] = None,
@@ -105,7 +106,7 @@ async def stream(
                 # Default values for current_position and total_duration
                 current_position = 0
                 total_duration = duration_sec  # Use fetched video duration
-                img = await gen_thumb(vidid, current_position, total_duration)
+                img = await gen_thumb(vidid, current_position, total_duration, user_dp_url, user_name)
                 button = stream_markup(_, vidid, chat_id)
                 run = await app.send_photo(
                     original_chat_id,
@@ -167,7 +168,7 @@ async def stream(
                 "video" if video else "audio",
             )
             position = len(db.get(chat_id)) - 1
-            qimg = await gen_qthumb(vidid)
+            qimg = await gen_qthumb(vidid, current_position, total_duration, user_dp_url, user_name)
             run = await app.send_photo(
                 original_chat_id,
                 photo=qimg,
@@ -196,7 +197,7 @@ async def stream(
             )
             current_position = 0  # Starting position
             total_duration = duration_sec  # Use duration_sec as total duration
-            img = await gen_thumb(vidid, current_position, total_duration)
+            img = await gen_thumb(vidid, current_position, total_duration, user_dp_url, user_name)
             button = stream_markup(_, vidid, chat_id)
             run = await app.send_photo(
                 original_chat_id,
@@ -498,7 +499,7 @@ async def stream(
                 "video" if video else "audio",
                 forceplay=forceplay,
             )
-            img = await gen_thumb(vidid)
+            img = await gen_thumb(vidid, current_position, total_duration, user_dp_url, user_name)
             button = telegram_markup(_, chat_id)
             run = await app.send_photo(
                 original_chat_id,
