@@ -56,7 +56,7 @@ EXTRA_PLUGINS = getenv(
 
 EXTRA_PLUGINS_REPO = getenv(
     "EXTRA_PLUGINS_REPO",
-    "https://github.com/Badhacker98/BADMUSIC_PLUGIN",
+    "https://github.com/SURAJSALAINI12/BADMUSIC_PLUGIN",
 )
 # Fill here the external plugins repo where plugins that you want to load
 
@@ -68,7 +68,7 @@ EXTRA_PLUGINS_FOLDER = getenv("EXTRA_PLUGINS_FOLDER", "plugins")
 
 # Duration Limit for downloading Songs in MP3 or MP4 format from bot
 SONG_DOWNLOAD_DURATION = int(
-    getenv("SONG_DOWNLOAD_DURATION_LIMIT", "1000")
+    getenv("SONG_DOWNLOAD_DURATION_LIMIT", "1000000")
 )  # Remember to give value in Minutes
 
 
@@ -142,7 +142,7 @@ TELEGRAM_DOWNLOAD_EDIT_SLEEP = int(getenv("TELEGRAM_EDIT_SLEEP", "5"))
 
 
 # Your Github Repo.. Will be shown on /start Command
-GITHUB_REPO = getenv("GITHUB_REPO", "https://github.com/Badhacker98/BADMUSIC")
+GITHUB_REPO = getenv("GITHUB_REPO", "https://github.com/SURAJSALAINI12/BADMUSIC")
 
 
 # Spotify Client.. Get it from https://developer.spotify.com/dashboard
