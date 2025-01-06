@@ -1,5 +1,5 @@
 # Copyright (C) 2024 by Badhacker98@Github, < https://github.com/Badhacker98 >.
-# Owner https://t.me/ll_BAD_MUNDA_ll
+# Owner https://t.me/cute_boy11
 
 import asyncio
 import os
@@ -101,7 +101,7 @@ async def _clear_(chat_id):
     try:
         await app.send_message(
             chat_id,
-            f"**🎧 ɴᴇᴡ sᴏɴɢ ʟᴀɢᴀᴏ ɴᴀ ʙᴀʙʏ🥀⁣⁣⁣⁣⁣⁣⁣⁣⁣⁣⁣**{text}",
+            f"**🎧 𝐍𝐞𝐰 𝐒𝐨𝐧𝐠 𝐥𝐚𝐠𝐚𝐢𝐲𝐞 𝐧𝐚 🥀⁣⁣⁣⁣⁣⁣⁣⁣⁣⁣⁣**{text}",
         )
     except Exception as e:
         print(f"Error sending message: {e}")
