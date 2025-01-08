@@ -16,7 +16,7 @@ httpcore==0.15.0
 lyricsgenius
 motor==2.5.0
 wget
-pillow==9.5.0
+pillow==11.1.0
 pymongo==3.12.0
 pytz==2023.3.post1
 psutil
