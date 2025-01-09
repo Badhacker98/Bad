@@ -37,7 +37,7 @@ tgcrypto
 urllib3
 uvloop
 flask
-urllib3==2.2.3
+urllib3==2.3.0
 gunicorn==20.1.0
 yt-dlp==2024.12.23.232812.dev0
 youtube-search
