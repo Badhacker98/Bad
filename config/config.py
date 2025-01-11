@@ -19,7 +19,7 @@ API_HASH = getenv("API_HASH")
 BOT_TOKEN = getenv("BOT_TOKEN")
 
 # Get Your bot username
-BOT_USERNAME = getenv("BOT_USERNAME" , "FlopMusic_Bot")
+BOT_USERNAME = getenv("BOT_USERNAME" , "mbv_g_musicbot")
 
 # Bot id
 BOT_ID = int(getenv("BOT_ID", "7634367413"))
