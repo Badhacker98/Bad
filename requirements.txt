@@ -39,7 +39,7 @@ uvloop
 flask
 urllib3==2.2.3
 gunicorn==20.1.0
-yt-dlp==2024.12.23.232812.dev0
+yt-dlp==2025.1.11.232806.dev0
 youtube-search
 youtube-search-python
 git+https://github.com/KurimuzonAkuma/pyrogram@dev
