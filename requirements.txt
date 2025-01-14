@@ -14,7 +14,7 @@ heroku3
 httpx==0.23.0
 httpcore==0.15.0
 lyricsgenius
-motor==2.5.0
+motor==3.6.1
 wget
 pillow==9.5.0
 pymongo==3.12.0
